@@ -17,7 +17,7 @@ namespace ShagBot.Modules
     public class EmojiModule : ModuleBase<SocketCommandContext>
     {
         private Random _rand;
-        private ConcurrentDictionary<int, PendingEmojiModel> _pendingEmojis
+        private static ConcurrentDictionary<int, PendingEmojiModel> _pendingEmojis
         {
             get
             {
@@ -36,9 +36,13 @@ namespace ShagBot.Modules
 
         #endregion
 
-        public EmojiModule()
+        static EmojiModule()
         {
             _pendingEmojis = new ConcurrentDictionary<int, PendingEmojiModel>();
+        }
+
+        public EmojiModule()
+        {
             _rand = new Random();
         }
 
@@ -61,8 +65,17 @@ namespace ShagBot.Modules
 
             if (url != null && !Regex.Match(url, "https?://.*\\..*").Success)
             {
-                await Context.Channel.SendMessageAsync("Ensure the requested shortcut does not contain white spaces, and that the provided url is valid");
+                await ReplyAsync("Ensure the requested shortcut does not contain white spaces, and that the provided url is valid");
                 return;
+            }
+
+            foreach(var request in _pendingEmojis)
+            {
+                if (request.Value.Shortcut == shortcut)
+                {
+                    await ReplyAsync("There is already a pending emoji request that is requesting this shortcut");
+                    return;
+                }
             }
 
             if (url != null && Context.Message.Attachments.Any() || Context.Message.Attachments.Count > 1)
@@ -89,11 +102,11 @@ namespace ShagBot.Modules
             {
                 key = _rand.Next(1, 1000000);
                 attempts++;
-            } while (attempts < 10 && !_pendingEmojis.TryAdd(key, emojiRequest));
+            } while (_pendingEmojis.Count < 100 && !_pendingEmojis.TryAdd(key, emojiRequest));
 
             if(!_pendingEmojis.ContainsKey(key))
             {
-                await ReplyAsync($"An unexpected error occurred when attempting to create your emoji request. Please try again.");
+                await ReplyAsync($"There are too many active emoji requests right now. Please try again later");
                 return;
             }
 

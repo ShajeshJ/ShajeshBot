@@ -51,9 +51,9 @@ namespace ShagBot.Modules
         [Remarks(_requeustEmojiRemarks)]
         public async Task RequestEmoji(string shortcut, string url = null)
         {
-            if (string.IsNullOrWhiteSpace(shortcut) || shortcut.Contains(' '))
+            if (string.IsNullOrWhiteSpace(shortcut) || !IsAlphaNumeric(shortcut))
             {
-                await ReplyAsync("Emoji shortcut cannot be empty or contain white spaces");
+                await ReplyAsync("Emoji shortcut cannot be empty and can only contain alphanumeric and underscore characters");
                 return;
             }
 
@@ -110,14 +110,7 @@ namespace ShagBot.Modules
                 return;
             }
 
-            var adminRoleId = CommandHandler.AdminRoleId;
-            var adminUsers = Context.Guild.Users.Where(x => x.Roles.Any(y => y.Id == adminRoleId));
-
-            foreach (var admin in adminUsers)
-            {
-                await admin.SendMessageAsync(
-                    $"{Context.User.Username} requested to add an emoji from the url '{url}' with shortcut '{shortcut}'. Request number is {key}");
-            }
+            await MessageAdmins($"{Context.User.Username} requested to add an emoji from the url '{url}' with shortcut '{shortcut}'. Request number is {key}");
 
             await Context.Channel.SendMessageAsync("Emoji request has been created successfully.");
         }
@@ -126,6 +119,10 @@ namespace ShagBot.Modules
         [RequireAdmin]
         public async Task ListPendingEmojis()
         {
+            if (_pendingEmojis.Count == 0)
+            {
+                await Context.User.SendMessageAsync("There are no currently pending emoji requests.");
+            }
             foreach (var request in _pendingEmojis)
             {
                 var requestUserName = Context.Guild.GetUser(request.Value.RequestUserId)?.Username;
@@ -170,6 +167,10 @@ namespace ShagBot.Modules
                 catch (Exception ex)
                 {
                     await ReplyAsync($"An error occurred when trying to process the image from url '{emojiRequest.Url}'");
+                    await MessageAdmins(new string[] {
+                        $"Exception thrown by request with shortcut {emojiRequest.Shortcut} with url {emojiRequest.Url}.",
+                        $"Exception: {ex.Message}"
+                    });
                 }
             }
         }
@@ -199,6 +200,31 @@ namespace ShagBot.Modules
                 {
                     await Context.Channel.SendMessageAsync(
                         $"{user.Mention} your emoji '{emojiRequest.Url}' with shortcut '{emojiRequest.Shortcut}' was rejected. Reason: {reason}");
+                }
+            }
+        }
+
+        private bool IsAlphaNumeric(string str)
+        {
+            Regex alphaNumericPattern = new Regex(@"^[a-zA-Z0-9_]*$");
+            return alphaNumericPattern.IsMatch(str);
+        }
+
+        private async Task MessageAdmins(string msg)
+        {
+            await MessageAdmins(new string[] { msg });
+        }
+
+        private async Task MessageAdmins(IEnumerable<string> msgs)
+        {
+            var adminRoleId = CommandHandler.AdminRoleId;
+            var adminUsers = Context.Guild.Users.Where(x => x.Roles.Any(y => y.Id == adminRoleId));
+
+            foreach (var admin in adminUsers)
+            {
+                foreach (var msg in msgs)
+                {
+                    await admin.SendMessageAsync(msg);
                 }
             }
         }

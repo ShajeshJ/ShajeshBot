@@ -11,6 +11,7 @@ namespace ShagBot
     public class Program
     {
         //invite https://discordapp.com/oauth2/authorize?client_id=383487792308813825&scope=bot&permissions=1610087545
+        [STAThread]
         public static void Main(string[] args)
         {
             ShagBot shagbot = null;

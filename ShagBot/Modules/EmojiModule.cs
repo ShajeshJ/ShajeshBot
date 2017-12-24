@@ -17,11 +17,11 @@ namespace ShagBot.Modules
     public class EmojiModule : ModuleBase<SocketCommandContext>
     {
         private Random _rand;
-        private static ConcurrentDictionary<int, PendingEmojiModel> _pendingEmojis
+        private static ConcurrentDictionary<string, PendingEmojiModel> _pendingEmojis
         {
             get
             {
-                return (ConcurrentDictionary<int, PendingEmojiModel>)ShagBot.Memory["_pendingEmojiDictionary"];
+                return (ConcurrentDictionary<string, PendingEmojiModel>)ShagBot.Memory["_pendingEmojiDictionary"];
             }
             set
             {
@@ -32,13 +32,13 @@ namespace ShagBot.Modules
         #region Summary/Remarks constants
 
         private const string _requestEmojiSummary = "Use this command to request an emoji to be added to the server. Emojis can either be provided by direct upload, or a direct url to an image.";
-        private const string _requeustEmojiRemarks = "1) You can only use this command with either a url of the image, or a single image attachment (cannot use both).\r\n\r\n2) To use the command with an image upload, first upload the image as an attachment to the bot channel. When it asks you type in an optional message with the attachment, enter the command.\r\n\r\n3) To use the command with a url of the image, you must ensure the url is a direct url to the image.";
+        private const string _requeustEmojiRemarks = "1) You can only use this command with either a url of the image, or a single image attachment (cannot use both).\r\n\r\n2) To use the command with an image upload, first upload the image as an attachment to the bot channel. When it asks you type in an optional message with the attachment, enter the command.\r\n\r\n3) To use the command with a url of the image, you must ensure the url is a direct url to the image.\r\n\r\n4) If you upload an emoji with a shortcut name matching one that is already pending, the new emoji request will replace the existing one.";
 
         #endregion
 
         static EmojiModule()
         {
-            _pendingEmojis = new ConcurrentDictionary<int, PendingEmojiModel>();
+            _pendingEmojis = new ConcurrentDictionary<string, PendingEmojiModel>();
         }
 
         public EmojiModule()
@@ -46,7 +46,7 @@ namespace ShagBot.Modules
             _rand = new Random();
         }
 
-        [Command("RequestEmoji")]
+        [Command("requestemoji")]
         [Summary(_requestEmojiSummary)]
         [Remarks(_requeustEmojiRemarks)]
         public async Task RequestEmoji(string shortcut, string url = null)
@@ -69,13 +69,10 @@ namespace ShagBot.Modules
                 return;
             }
 
-            foreach(var request in _pendingEmojis)
+            if (_pendingEmojis.ContainsKey(shortcut) && _pendingEmojis[shortcut].RequestUserId != Context.User.Id)
             {
-                if (request.Value.Shortcut == shortcut)
-                {
-                    await ReplyAsync("There is already a pending emoji request that is requesting this shortcut");
-                    return;
-                }
+                await ReplyAsync("There is already a pending emoji request that is requesting this shortcut");
+                return;
             }
 
             if (url != null && Context.Message.Attachments.Any() || Context.Message.Attachments.Count > 1)
@@ -95,27 +92,34 @@ namespace ShagBot.Modules
                 RequestUserId = Context.User.Id
             };
 
-            int key = -1;
-            var attempts = 0;
+            var isAddRequest = true;
 
-            do
+            _pendingEmojis.AddOrUpdate(shortcut, emojiRequest, (key, value) =>
             {
-                key = _rand.Next(1, 1000000);
-                attempts++;
-            } while (_pendingEmojis.Count < 100 && !_pendingEmojis.TryAdd(key, emojiRequest));
+                isAddRequest = false;
+                return emojiRequest;
+            });
 
-            if(!_pendingEmojis.ContainsKey(key))
+            if (!_pendingEmojis.ContainsKey(shortcut))
             {
-                await ReplyAsync($"There are too many active emoji requests right now. Please try again later");
+                await ReplyAsync($"An error occurred when attempting to create the emoji request.");
                 return;
             }
 
-            await MessageAdmins($"{Context.User.Username} requested to add an emoji from the url '{url}' with shortcut '{shortcut}'. Request number is {key}");
-
-            await Context.Channel.SendMessageAsync("Emoji request has been created successfully.");
+            if (isAddRequest)
+            {
+                await MessageAdmins($"{Context.User.Username} requested to add the emoji {url} with shortcut '{shortcut}'.");
+                await ReplyAsync("Emoji request has been created successfully.");
+            }
+            else
+            {
+                await MessageAdmins($"{Context.User.Username} requested {url} to be used as the emoji for emoji request with shortcut '{shortcut}'.");
+                await ReplyAsync($"Emoji request with shortcut '{shortcut}' was successfully updated with the emoji {url}.");
+            }
         }
 
-        [Command("ListPendingEmojis")]
+        [Command("listpendingemojis")]
+        [Alias("listemojis")]
         [RequireAdmin]
         public async Task ListPendingEmojis()
         {
@@ -127,13 +131,14 @@ namespace ShagBot.Modules
             {
                 var requestUserName = Context.Guild.GetUser(request.Value.RequestUserId)?.Username;
                 await Context.User.SendMessageAsync(
-                    $"{requestUserName} requested to add an emoji from the url '{request.Value.Url}' with shortcut '{request.Value.Shortcut}'. Request number is {request.Key}");
+                    $"{requestUserName} requested to add an emoji {request.Value.Url} with shortcut '{request.Value.Shortcut}'. Request id is '{request.Key}'");
             }
         }
 
-        [Command("ApproveEmoji")]
+        [Command("approveemoji")]
+        [Alias("acceptemoji")]
         [RequireAdmin]
-        public async Task ApprovePendingEmoji(int requestId)
+        public async Task ApprovePendingEmoji(string requestId)
         {
             if (!_pendingEmojis.ContainsKey(requestId))
             {
@@ -175,9 +180,10 @@ namespace ShagBot.Modules
             }
         }
 
-        [Command("RejectEmoji")]
+        [Command("rejectemoji")]
+        [Alias("denyemoji")]
         [RequireAdmin]
-        public async Task RejectPendingEmoji(int requestId, [Remainder]string reason)
+        public async Task RejectPendingEmoji(string requestId, [Remainder]string reason)
         {
             if (!_pendingEmojis.ContainsKey(requestId))
             {

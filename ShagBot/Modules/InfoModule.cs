@@ -17,7 +17,7 @@ namespace ShagBot.Modules
             _commands = CommandHandler.Commands;
         }
 
-        [Command("Help")]
+        [Command("help")]
         [Summary("Returns a list of available commands and their parameters, or if specified, details about a specific command.")]
         public async Task GetHelp(string commandName = null)
         {
@@ -49,9 +49,7 @@ namespace ShagBot.Modules
 
             var msg = new EmbedBuilder();
 
-            msg.WithTitle(cmd.Aliases.Aggregate("",
-                                        (output, name) => output + CommandHandler.CmdPrefix + name + " | ",
-                                        output => output.TrimEnd('|', ' '))
+            msg.WithTitle(CommandHandler.CmdPrefix + cmd.Name
                             + " " +
                             cmd.Parameters.Aggregate("",
                                             (output, param) =>
@@ -64,6 +62,9 @@ namespace ShagBot.Modules
                                             output => output.TrimEnd(' ')));
 
             msg.WithDescription(string.IsNullOrWhiteSpace(cmd.Summary) ? "<No Description>" : cmd.Summary);
+            msg.AddField("Aliases: ", 
+                string.Join("\r\n", cmd.Aliases.Select(x => CommandHandler.CmdPrefix + x)), 
+                true);
             msg.AddField("Notes: ", cmd.Remarks ?? "", true);
             msg.WithFooter("Parameters surrounded by square brackets are optional.");
 
@@ -80,9 +81,7 @@ namespace ShagBot.Modules
             {
                 if (!cmd.Preconditions.Any(x => x.GetType() == typeof(RequireAdminAttribute)))
                 {
-                    cmdList += cmd.Aliases.Aggregate("",
-                                        (output, name) => output + CommandHandler.CmdPrefix + name + " | ",
-                                        output => output.TrimEnd('|', ' '))
+                    cmdList += CommandHandler.CmdPrefix + cmd.Name
                             + " " +
                             cmd.Parameters.Aggregate("",
                                             (output, param) =>

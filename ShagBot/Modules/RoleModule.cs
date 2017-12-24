@@ -10,7 +10,7 @@ namespace ShagBot.Modules
 {
     public class RoleModule : ModuleBase<SocketCommandContext>
     {
-        [Command("CreateGroup")]
+        [Command("creategroup")]
         [Summary("Creates a new mentionable group with the name given by the roleName parameter.")]
         [Remarks("The command will fail if a role with the specified name already exists.")]
         public async Task CreateMentionGroup([Remainder]string roleName)
@@ -38,7 +38,8 @@ namespace ShagBot.Modules
             await Context.Channel.SendMessageAsync($"\"{roleName}\" created successfully.");
         }
 
-        [Command("Join")]
+        [Command("joingroup")]
+        [Alias("join")]
         [Summary("Use to add yourself to an existing mentionable group.")]
         [Remarks("The command will fail if you try to join an unjoinable group.")]
         public async Task JoinMentionGroup([Remainder]IRole role)
@@ -57,7 +58,8 @@ namespace ShagBot.Modules
             }
         }
 
-        [Command("Leave")]
+        [Command("leavegroup")]
+        [Alias("leave")]
         [Summary("Use to leave a mentionable group that you are currently part of.")]
         [Remarks("The command will fail if you are not part of the group, or if you do not have permission to leave the specified role.")]
         public async Task LeaveMentionGroup([Remainder]IRole role)
@@ -80,7 +82,7 @@ namespace ShagBot.Modules
             }
         }
 
-        [Command("ListGroups")]
+        [Command("listgroups")]
         [Summary("Displays a list of all the available mentionable groups that you can join.")]
         public async Task ListMentionGroups()
         {

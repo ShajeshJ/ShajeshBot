@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using ShagBot.Attributes;
+using ShagBot.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace ShagBot.Modules
         }
 
         [Command("help")]
-        [Summary("Returns a list of available commands and their parameters, or if specified, details about a specific command.")]
+        [CmdSummary(nameof(Resource.HelpSummary), typeof(Resource))]
         public async Task GetHelp(string commandName = null)
         {
             if (commandName == null)
@@ -61,11 +62,20 @@ namespace ShagBot.Modules
                                             },
                                             output => output.TrimEnd(' ')));
 
-            msg.WithDescription(string.IsNullOrWhiteSpace(cmd.Summary) ? "<No Description>" : cmd.Summary);
-            msg.AddField("Aliases: ", 
-                string.Join("\r\n", cmd.Aliases.Select(x => CommandHandler.CmdPrefix + x)), 
+            msg.WithDescription(string.IsNullOrWhiteSpace(cmd.Summary) ? "<No Description Available>" : cmd.Summary);
+
+            if (cmd.Aliases.Count > 0)
+            {
+                msg.AddField("Aliases: ",
+                string.Join("\r\n", cmd.Aliases.Select(x => CommandHandler.CmdPrefix + x)),
                 true);
-            msg.AddField("Notes: ", cmd.Remarks ?? "", true);
+            }
+
+            if (!cmd.Remarks.IsNullOrWhitespace())
+            {
+                msg.AddField("Notes: ", cmd.Remarks ?? "", true);
+            }
+            
             msg.WithFooter("Parameters surrounded by square brackets are optional.");
 
             await ReplyAsync("", false, msg.Build());

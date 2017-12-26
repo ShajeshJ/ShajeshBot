@@ -29,13 +29,6 @@ namespace ShagBot.Modules
             }
         }
 
-        #region Summary/Remarks constants
-
-        private const string _requestEmojiSummary = "Use this command to request an emoji to be added to the server. Emojis can either be provided by direct upload, or a direct url to an image.";
-        private const string _requeustEmojiRemarks = "1) You can only use this command with either a url of the image, or a single image attachment (cannot use both).\r\n\r\n2) To use the command with an image upload, first upload the image as an attachment to the bot channel. When it asks you type in an optional message with the attachment, enter the command.\r\n\r\n3) To use the command with a url of the image, you must ensure the url is a direct url to the image.\r\n\r\n4) If you upload an emoji with a shortcut name matching one that is already pending, the new emoji request will replace the existing one.";
-
-        #endregion
-
         static EmojiModule()
         {
             _pendingEmojis = new ConcurrentDictionary<string, PendingEmojiModel>();
@@ -47,8 +40,8 @@ namespace ShagBot.Modules
         }
 
         [Command("requestemoji")]
-        [Summary(_requestEmojiSummary)]
-        [Remarks(_requeustEmojiRemarks)]
+        [CmdSummary(nameof(Resource.RequestEmojiSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.RequestEmojiRemarks), typeof(Resource))]
         public async Task RequestEmoji(string shortcut, string url = null)
         {
             if (string.IsNullOrWhiteSpace(shortcut) || !IsAlphaNumeric(shortcut))

@@ -5,14 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using ShagBot.Attributes;
 
 namespace ShagBot.Modules
 {
     public class RoleModule : ModuleBase<SocketCommandContext>
     {
         [Command("creategroup")]
-        [Summary("Creates a new mentionable group with the name given by the roleName parameter.")]
-        [Remarks("The command will fail if a role with the specified name already exists.")]
+        [CmdSummary(nameof(Resource.CreateGroupSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.CreateGroupRemarks), typeof(Resource))]
         public async Task CreateMentionGroup([Remainder]string roleName)
         {
             if (string.IsNullOrWhiteSpace(roleName))
@@ -40,8 +41,8 @@ namespace ShagBot.Modules
 
         [Command("joingroup")]
         [Alias("join")]
-        [Summary("Use to add yourself to an existing mentionable group.")]
-        [Remarks("The command will fail if you try to join an unjoinable group.")]
+        [CmdSummary(nameof(Resource.JoinGroupSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.JoinGroupRemarks), typeof(Resource))]
         public async Task JoinMentionGroup([Remainder]IRole role)
         {
             var user = Context.User as IGuildUser;
@@ -60,8 +61,8 @@ namespace ShagBot.Modules
 
         [Command("leavegroup")]
         [Alias("leave")]
-        [Summary("Use to leave a mentionable group that you are currently part of.")]
-        [Remarks("The command will fail if you are not part of the group, or if you do not have permission to leave the specified role.")]
+        [CmdSummary(nameof(Resource.JoinGroupSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.LeaveGrroupRemarks), typeof(Resource))]
         public async Task LeaveMentionGroup([Remainder]IRole role)
         {
             var user = Context.User as IGuildUser;
@@ -83,7 +84,7 @@ namespace ShagBot.Modules
         }
 
         [Command("listgroups")]
-        [Summary("Displays a list of all the available mentionable groups that you can join.")]
+        [CmdSummary(nameof(Resource.ListGroupsSummary), typeof(Resource))]
         public async Task ListMentionGroups()
         {
             var botUser = Context.Guild.GetUser(Context.Client.CurrentUser.Id);

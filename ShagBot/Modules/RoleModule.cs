@@ -6,12 +6,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using ShagBot.Attributes;
+using ShagBot.Extensions;
 
 namespace ShagBot.Modules
 {
     public class RoleModule : ModuleBase<SocketCommandContext>
     {
         [Command("creategroup")]
+        [Alias("create")]
         [CmdSummary(nameof(Resource.CreateGroupSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.CreateGroupRemarks), typeof(Resource))]
         public async Task CreateMentionGroup([Remainder]string roleName)
@@ -46,9 +48,8 @@ namespace ShagBot.Modules
         public async Task JoinMentionGroup([Remainder]IRole role)
         {
             var user = Context.User as IGuildUser;
-            var botUser = Context.Guild.GetUser(Context.Client.CurrentUser.Id);
             
-            if (GetJoinableGroupIds(botUser).Contains(role.Id))
+            if (GetJoinableGroupIds().Contains(role.Id))
             {
                 await user.AddRoleAsync(role);
                 await Context.Channel.SendMessageAsync($"Joined \"{role.Name}\" successfully");
@@ -66,13 +67,12 @@ namespace ShagBot.Modules
         public async Task LeaveMentionGroup([Remainder]IRole role)
         {
             var user = Context.User as IGuildUser;
-            var botUser = Context.Guild.GetUser(Context.Client.CurrentUser.Id);
 
             if (!user.RoleIds.Contains(role.Id))
             {
                 await Context.Channel.SendMessageAsync($"You are not part of group \"{role.Name}\"");
             }
-            else if (GetJoinableGroupIds(botUser).Contains(role.Id))
+            else if (GetJoinableGroupIds().Contains(role.Id))
             {
                 await user.RemoveRoleAsync(role);
                 await Context.Channel.SendMessageAsync($"Left \"{role.Name}\" successfully");
@@ -83,19 +83,63 @@ namespace ShagBot.Modules
             }
         }
 
+        [Command("deletegroup")]
+        [Alias("delete")]
+        [CmdSummary(nameof(Resource.DeleteGroupSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.DeleteGroupRemarks), typeof(Resource))]
+        public async Task DeleteMentionGroup([Remainder]IRole role)
+        {
+            if (!GetJoinableGroupIds().Contains(role.Id))
+            {
+                await ReplyAsync($"Cannot delete group \"{role.Name}\" as it is not a custom mention group.");
+            }
+            else if (Context.Guild.Users.Any(u => !u.IsBot && u.Roles.Select(r => r.Id).Contains(role.Id)))
+            {
+                await ReplyAsync($"There are currently members part of the group \"{role.Name}\". Only mention groups without members can be deleted.");
+            }
+            else
+            {
+                await role.DeleteAsync();
+                await ReplyAsync($"Mention group deleted successfully.");
+            }
+        }
+
+        [Command("listmembers")]
+        [Alias("listgroupmembers", "members")]
+        [CmdSummary(nameof(Resource.ListMembersSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.ListMembersRemarks), typeof(Resource))]
+        public async Task ListMentionGroupMembers([Remainder]IRole role)
+        {
+            if (GetJoinableGroupIds().Contains(role.Id))
+            {
+                var members = Context.Guild.Users.Where(u => !u.IsBot && u.Roles.Select(r => r.Id).Contains(role.Id));
+
+                var memberList = new EmbedBuilder();
+                memberList.WithTitle($"Members of {role.Name}: ");
+                memberList.WithDescription(members.Count() > 0 ? 
+                    string.Join(Environment.NewLine, members.Select(u => u.Nickname.IsNullOrWhitespace() ? u.Username : u.Nickname)) 
+                    : "<No Members>");
+
+                await ReplyAsync("", embed: memberList.Build());
+            }
+            else
+            {
+                await ReplyAsync($"Role \"{role.Name}\" is not a custom mention group.");
+            }
+        }
+
         [Command("listgroups")]
+        [Alias("list")]
         [CmdSummary(nameof(Resource.ListGroupsSummary), typeof(Resource))]
         public async Task ListMentionGroups()
         {
-            var botUser = Context.Guild.GetUser(Context.Client.CurrentUser.Id);
-
             var roleList = new EmbedBuilder();
 
             roleList.WithTitle("Available Roles");
 
             var strList = "";
 
-            foreach(var role in GetJoinableGroups(botUser))
+            foreach(var role in GetJoinableGroups())
             {
                 strList += role.Name + Environment.NewLine;
             }
@@ -105,13 +149,14 @@ namespace ShagBot.Modules
             await Context.Channel.SendMessageAsync("", embed: roleList.Build());
         }
 
-        private IEnumerable<ulong> GetJoinableGroupIds(SocketGuildUser bot)
+        private IEnumerable<ulong> GetJoinableGroupIds()
         {
-            return GetJoinableGroups(bot).Select(x => x.Id);
+            return GetJoinableGroups().Select(x => x.Id);
         }
 
-        private IEnumerable<IRole> GetJoinableGroups(SocketGuildUser bot)
+        private IEnumerable<IRole> GetJoinableGroups()
         {
+            var bot = Context.Guild.GetUser(Context.Client.CurrentUser.Id);
             return bot.Roles.Where(x => !x.IsManaged && !x.IsEveryone);
         }
     }

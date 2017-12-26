@@ -79,6 +79,24 @@ namespace ShagBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This command will not allow you to delete roles that are not custom mention groups. This command will also not allow you to delete a custom mention group if there are users currently part of the group..
+        /// </summary>
+        internal static string DeleteGroupRemarks {
+            get {
+                return ResourceManager.GetString("DeleteGroupRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will delete the specified custom mention group..
+        /// </summary>
+        internal static string DeleteGroupSummary {
+            get {
+                return ResourceManager.GetString("DeleteGroupSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Returns a list of available commands and their parameters, or if specified, details about a specific command..
         /// </summary>
         internal static string HelpSummary {
@@ -129,6 +147,24 @@ namespace ShagBot {
         internal static string ListGroupsSummary {
             get {
                 return ResourceManager.GetString("ListGroupsSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The command will fail if the specified mention group is not a custom group that was created with the creategroup command..
+        /// </summary>
+        internal static string ListMembersRemarks {
+            get {
+                return ResourceManager.GetString("ListMembersRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command lists all the members in the specified mention group..
+        /// </summary>
+        internal static string ListMembersSummary {
+            get {
+                return ResourceManager.GetString("ListMembersSummary", resourceCulture);
             }
         }
         

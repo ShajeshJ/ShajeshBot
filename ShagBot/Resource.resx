@@ -123,6 +123,12 @@
   <data name="CreateGroupSummary" xml:space="preserve">
     <value>Creates a new mentionable group with the name given by the roleName parameter.</value>
   </data>
+  <data name="DeleteGroupRemarks" xml:space="preserve">
+    <value>This command will not allow you to delete roles that are not custom mention groups. This command will also not allow you to delete a custom mention group if there are users currently part of the group.</value>
+  </data>
+  <data name="DeleteGroupSummary" xml:space="preserve">
+    <value>This command will delete the specified custom mention group.</value>
+  </data>
   <data name="HelpSummary" xml:space="preserve">
     <value>Returns a list of available commands and their parameters, or if specified, details about a specific command.</value>
   </data>
@@ -140,6 +146,12 @@
   </data>
   <data name="ListGroupsSummary" xml:space="preserve">
     <value>Displays a list of all the available mentionable groups that you can join.</value>
+  </data>
+  <data name="ListMembersRemarks" xml:space="preserve">
+    <value>The command will fail if the specified mention group is not a custom group that was created with the creategroup command.</value>
+  </data>
+  <data name="ListMembersSummary" xml:space="preserve">
+    <value>This command lists all the members in the specified mention group.</value>
   </data>
   <data name="RequestEmojiRemarks" xml:space="preserve">
     <value>1) You can only use this command with either a url of the image, or a single image attachment (cannot use both).\r\n\r\n2) To use the command with an image upload, first upload the image as an attachment to the bot channel. When it asks you type in an optional message with the attachment, enter the command.\r\n\r\n3) To use the command with a url of the image, you must ensure the url is a direct url to the image.\r\n\r\n4) If you upload an emoji with a shortcut name matching one that is already pending, the new emoji request will replace the existing one.</value>

@@ -103,6 +103,7 @@
     <Compile Include="Attributes\CmdRemarksAttribute.cs" />
     <Compile Include="Attributes\RequireAdminAttribute.cs" />
     <Compile Include="Attributes\CmdSummaryAttribute.cs" />
+    <Compile Include="Attributes\RequireBotChannelAttribute.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\PendingEmojiModel.cs" />
@@ -117,6 +118,7 @@
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Include="ShagBot.cs" />
+    <Compile Include="Utilities\CustomConfigManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

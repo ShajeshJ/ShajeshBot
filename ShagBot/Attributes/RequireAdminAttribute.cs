@@ -12,7 +12,10 @@ namespace ShagBot.Attributes
     {
         public async override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            if ((context.User as IGuildUser)?.RoleIds.Any(x => x == CommandHandler.AdminRoleId) == true)
+            var guild = await context.Client.GetGuildAsync(CommandHandler.GuildId);
+            var user = await guild.GetUserAsync(context.User.Id);
+
+            if (user.RoleIds.Any(x => x == CommandHandler.AdminRoleId) == true)
             {
                 return PreconditionResult.FromSuccess();
             }

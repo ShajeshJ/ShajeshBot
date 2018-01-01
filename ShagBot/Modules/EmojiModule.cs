@@ -40,6 +40,7 @@ namespace ShagBot.Modules
         }
 
         [Command("requestemoji")]
+        [RequireBotChannel]
         [CmdSummary(nameof(Resource.RequestEmojiSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.RequestEmojiRemarks), typeof(Resource))]
         public async Task RequestEmoji(string shortcut, string url = null)
@@ -114,6 +115,7 @@ namespace ShagBot.Modules
         [Command("listpendingemojis")]
         [Alias("listemojis")]
         [RequireAdmin]
+        [RequireBotChannel]
         public async Task ListPendingEmojis()
         {
             if (_pendingEmojis.Count == 0)
@@ -131,6 +133,7 @@ namespace ShagBot.Modules
         [Command("approveemoji")]
         [Alias("acceptemoji")]
         [RequireAdmin]
+        [RequireBotChannel]
         public async Task ApprovePendingEmoji(string requestId)
         {
             if (!_pendingEmojis.ContainsKey(requestId))
@@ -176,6 +179,7 @@ namespace ShagBot.Modules
         [Command("rejectemoji")]
         [Alias("denyemoji")]
         [RequireAdmin]
+        [RequireBotChannel]
         public async Task RejectPendingEmoji(string requestId, [Remainder]string reason)
         {
             if (!_pendingEmojis.ContainsKey(requestId))

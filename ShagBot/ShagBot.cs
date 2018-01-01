@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using ShagBot.Extensions;
+using ShagBot.Utilities;
 using System.Collections.Concurrent;
 using System.Configuration;
 using System.Threading.Tasks;
@@ -25,14 +26,14 @@ namespace ShagBot
         public async Task StartAsync()
         {
             _handler = new CommandHandler(_client);
-            await _client.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["Bot_Token"]);
+            await _client.LoginAsync(TokenType.Bot, CustomConfigManager.AppSettings["Bot_Token"]);
             await _client.SetGameAsync(CommandHandler.CmdPrefix + "help");
             await _client.StartAsync();
             _client.GuildAvailable += async (guild) =>
             {
                 if (_patchnotes != null)
                 {
-                    var botChannel = guild.GetChannel(ConfigurationManager.AppSettings["Bot_Channel"].ToUInt64()) as SocketTextChannel;
+                    var botChannel = guild.GetChannel(CustomConfigManager.AppSettings["Bot_Channel"].ToUInt64()) as SocketTextChannel;
                     
                     if (botChannel == null)
                     {
@@ -44,6 +45,8 @@ namespace ShagBot
                     embed.WithDescription(_patchnotes);
                     var msg = await botChannel.SendMessageAsync("@here", embed: embed.Build());
                     await msg.PinAsync();
+
+                    _patchnotes = null;
                 }
             };
 

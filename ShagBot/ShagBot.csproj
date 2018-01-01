@@ -104,9 +104,11 @@
     <Compile Include="Attributes\RequireAdminAttribute.cs" />
     <Compile Include="Attributes\CmdSummaryAttribute.cs" />
     <Compile Include="Attributes\RequireBotChannelAttribute.cs" />
+    <Compile Include="Attributes\RequireDMAttribute.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\PendingEmojiModel.cs" />
+    <Compile Include="Modules\AdminModule.cs" />
     <Compile Include="Modules\EmojiModule.cs" />
     <Compile Include="Modules\InfoModule.cs" />
     <Compile Include="Modules\RoleModule.cs" />

@@ -8,14 +8,11 @@ using System.Threading.Tasks;
 
 namespace ShagBot.Attributes
 {
-    public class RequireAdminAttribute : PreconditionAttribute
+    public class RequireDMAttribute : PreconditionAttribute
     {
         public async override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            var guild = await context.Client.GetGuildAsync(CommandHandler.GuildId);
-            var user = await guild.GetUserAsync(context.User.Id);
-
-            if (user.RoleIds.Any(x => x == CommandHandler.AdminRoleId) == true)
+            if ((context as SocketCommandContext)?.IsPrivate == true)
             {
                 return PreconditionResult.FromSuccess();
             }

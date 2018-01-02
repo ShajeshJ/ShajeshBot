@@ -40,7 +40,7 @@ namespace ShagBot.Modules
         }
 
         [Command("requestemoji")]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.RequestEmojiSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.RequestEmojiRemarks), typeof(Resource))]
         public async Task RequestEmoji(string shortcut, string url = null)
@@ -115,25 +115,24 @@ namespace ShagBot.Modules
         [Command("listpendingemojis")]
         [Alias("listemojis")]
         [RequireAdmin]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.DM)]
         public async Task ListPendingEmojis()
         {
             if (_pendingEmojis.Count == 0)
             {
-                await Context.User.SendMessageAsync("There are no currently pending emoji requests.");
+                await ReplyAsync("There are no currently pending emoji requests.");
             }
             foreach (var request in _pendingEmojis)
             {
-                var requestUserName = Context.Guild.GetUser(request.Value.RequestUserId)?.Username;
-                await Context.User.SendMessageAsync(
-                    $"{requestUserName} requested to add an emoji {request.Value.Url} with shortcut '{request.Value.Shortcut}'. Request id is '{request.Key}'");
+                var requestUserName = Context.Client.GetUser(request.Value.RequestUserId)?.Username;
+                await ReplyAsync($"{requestUserName} requested to add an emoji {request.Value.Url} with shortcut '{request.Value.Shortcut}'. Request id is '{request.Key}'");
             }
         }
 
         [Command("approveemoji")]
         [Alias("acceptemoji")]
         [RequireAdmin]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         public async Task ApprovePendingEmoji(string requestId)
         {
             if (!_pendingEmojis.ContainsKey(requestId))
@@ -179,7 +178,7 @@ namespace ShagBot.Modules
         [Command("rejectemoji")]
         [Alias("denyemoji")]
         [RequireAdmin]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         public async Task RejectPendingEmoji(string requestId, [Remainder]string reason)
         {
             if (!_pendingEmojis.ContainsKey(requestId))

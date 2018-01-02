@@ -14,7 +14,7 @@ namespace ShagBot.Modules
     {
         [Command("creategroup")]
         [Alias("create")]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.CreateGroupSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.CreateGroupRemarks), typeof(Resource))]
         public async Task CreateMentionGroup([Remainder]string roleName)
@@ -44,7 +44,7 @@ namespace ShagBot.Modules
 
         [Command("joingroup")]
         [Alias("join")]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.JoinGroupSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.JoinGroupRemarks), typeof(Resource))]
         public async Task JoinMentionGroup([Remainder]IRole role)
@@ -64,7 +64,7 @@ namespace ShagBot.Modules
 
         [Command("leavegroup")]
         [Alias("leave")]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.JoinGroupSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.LeaveGrroupRemarks), typeof(Resource))]
         public async Task LeaveMentionGroup([Remainder]IRole role)
@@ -88,7 +88,7 @@ namespace ShagBot.Modules
 
         [Command("deletegroup")]
         [Alias("delete")]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.DeleteGroupSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.DeleteGroupRemarks), typeof(Resource))]
         public async Task DeleteMentionGroup([Remainder]IRole role)
@@ -110,7 +110,7 @@ namespace ShagBot.Modules
 
         [Command("listmembers")]
         [Alias("listgroupmembers", "members")]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.ListMembersSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.ListMembersRemarks), typeof(Resource))]
         public async Task ListMentionGroupMembers([Remainder]IRole role)
@@ -135,7 +135,7 @@ namespace ShagBot.Modules
 
         [Command("listgroups")]
         [Alias("list")]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.ListGroupsSummary), typeof(Resource))]
         public async Task ListMentionGroups()
         {

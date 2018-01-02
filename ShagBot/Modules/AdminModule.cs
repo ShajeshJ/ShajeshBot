@@ -14,7 +14,7 @@ namespace ShagBot.Modules
     public class AdminModule : ModuleBase<SocketCommandContext>
     {
         [Command("say")]
-        [RequireDMContext]
+        [RequireBotContext(CmdChannelType.DM)]
         public async Task MakeBotSay([Remainder] string message)
         {
             var channel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ITextChannel;
@@ -31,6 +31,7 @@ namespace ShagBot.Modules
 
         [Command("removemessages")]
         [Alias("rm")]
+        [RequireBotContext(CmdChannelType.Any)]
         public async Task RemoveLastMessages(int numberOfMsgs)
         {
             if (Context.IsPrivate || Context.Guild.Id != CommandHandler.GuildId)

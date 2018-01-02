@@ -19,7 +19,7 @@ namespace ShagBot.Modules
         }
 
         [Command("help")]
-        [RequireBotContext]
+        [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.HelpSummary), typeof(Resource))]
         public async Task GetHelp(string commandName = null)
         {

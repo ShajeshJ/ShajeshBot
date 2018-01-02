@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using ShagBot.Attributes;
 using ShagBot.Extensions;
 using System;
@@ -17,7 +18,7 @@ namespace ShagBot.Modules
         [RequireBotContext(CmdChannelType.DM)]
         public async Task MakeBotSay([Remainder] string message)
         {
-            var channel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ITextChannel;
+            var channel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ISocketMessageChannel;
 
             if (channel != null)
             {

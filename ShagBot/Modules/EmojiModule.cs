@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using ShagBot.Attributes;
 using ShagBot.Models;
 using System;
@@ -132,7 +133,7 @@ namespace ShagBot.Modules
         [Command("approveemoji")]
         [Alias("acceptemoji")]
         [RequireAdmin]
-        [RequireBotContext(CmdChannelType.BotChannel)]
+        [RequireBotContext(CmdChannelType.DM)]
         public async Task ApprovePendingEmoji(string requestId)
         {
             if (!_pendingEmojis.ContainsKey(requestId))
@@ -158,10 +159,12 @@ namespace ShagBot.Modules
                     {
                         var image = new Image(stream);
 
-                        var emote = await Context.Guild.CreateEmoteAsync(emojiRequest.Shortcut, image);
+                        var emote = await Context.Client.GetGuild(CommandHandler.GuildId).CreateEmoteAsync(emojiRequest.Shortcut, image);
 
-                        var msg = await ReplyAsync($"Emoji with shortcut '{emote.Name}' added successfully.");
-                        await msg.AddReactionAsync(emote);
+                        var botChannel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ISocketMessageChannel;
+
+                        var msg = await botChannel.SendMessageAsync($"Emoji with shortcut '{emote.Name}' added successfully.");
+                        await msg?.AddReactionAsync(emote);
                     }
                 }
                 catch (Exception ex)
@@ -178,7 +181,7 @@ namespace ShagBot.Modules
         [Command("rejectemoji")]
         [Alias("denyemoji")]
         [RequireAdmin]
-        [RequireBotContext(CmdChannelType.BotChannel)]
+        [RequireBotContext(CmdChannelType.DM)]
         public async Task RejectPendingEmoji(string requestId, [Remainder]string reason)
         {
             if (!_pendingEmojis.ContainsKey(requestId))
@@ -196,11 +199,12 @@ namespace ShagBot.Modules
             }
             else
             {
-                var user = Context.Guild.GetUser(emojiRequest.RequestUserId);
+                var user = Context.Client.GetUser(emojiRequest.RequestUserId);
 
                 if (user != null)
                 {
-                    await Context.Channel.SendMessageAsync(
+                    var botChannel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ISocketMessageChannel;
+                    await botChannel.SendMessageAsync(
                         $"{user.Mention} your emoji '{emojiRequest.Url}' with shortcut '{emojiRequest.Shortcut}' was rejected. Reason: {reason}");
                 }
             }

@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AdminHelpRemarks" xml:space="preserve">
+    <value>This command can only be used through a DM to the bot</value>
+  </data>
+  <data name="AdminHelpSummary" xml:space="preserve">
+    <value>Returns a list of available admin commands and their parameters, or if specified, details about a specific admin command.</value>
+  </data>
+  <data name="ApproveEmojiRemarks" xml:space="preserve">
+    <value>This command can only be used through a DM to the bot</value>
+  </data>
+  <data name="ApproveEmojiSummary" xml:space="preserve">
+    <value>This command will approve the currently pending emoji that is requesting the specified shortcut</value>
+  </data>
   <data name="CreateGroupRemarks" xml:space="preserve">
     <value>The command will fail if a role with the specified name already exists.</value>
   </data>
@@ -153,10 +165,34 @@
   <data name="ListMembersSummary" xml:space="preserve">
     <value>This command lists all the members in the specified mention group.</value>
   </data>
+  <data name="ListPendingEmojisRemarks" xml:space="preserve">
+    <value>This command can only be used through a DM to the bot</value>
+  </data>
+  <data name="ListPendingEmojisSummary" xml:space="preserve">
+    <value>This command will list the currently pending emojis awaiting approval</value>
+  </data>
+  <data name="RejectEmojiRemarks" xml:space="preserve">
+    <value>This command can only be used through a DM to the bot</value>
+  </data>
+  <data name="RejectEmojiSummary" xml:space="preserve">
+    <value>This command will reject the currently pending emoji that is requesting the specified shortcut, and will then ping the user indicating why the emoji is rejected</value>
+  </data>
+  <data name="RemoveLastMessagesRemarks" xml:space="preserve">
+    <value>1) This command can be used in any channel (it is not limited only to the Bot Channel).\r\n\r\n2) This command will only remove 10 messages at a time at most.</value>
+  </data>
+  <data name="RemoveLastMessagesSummary" xml:space="preserve">
+    <value>This command will remove the last X number of messages from the current channel.</value>
+  </data>
   <data name="RequestEmojiRemarks" xml:space="preserve">
     <value>1) You can only use this command with either a url of the image, or a single image attachment (cannot use both).\r\n\r\n2) To use the command with an image upload, first upload the image as an attachment to the bot channel. When it asks you type in an optional message with the attachment, enter the command.\r\n\r\n3) To use the command with a url of the image, you must ensure the url is a direct url to the image.\r\n\r\n4) If you upload an emoji with a shortcut name matching one that is already pending, the new emoji request will replace the existing one.</value>
   </data>
   <data name="RequestEmojiSummary" xml:space="preserve">
     <value>Use this command to request an emoji to be added to the server. Emojis can either be provided by direct upload, or a direct url to an image.</value>
+  </data>
+  <data name="SayRemarks" xml:space="preserve">
+    <value>This command can only be used through a DM to the bot</value>
+  </data>
+  <data name="SaySummary" xml:space="preserve">
+    <value>Use this command to say the specified message into the bot channel.</value>
   </data>
 </root>

@@ -61,6 +61,42 @@ namespace ShagBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
+        /// </summary>
+        internal static string AdminHelpRemarks {
+            get {
+                return ResourceManager.GetString("AdminHelpRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Returns a list of available admin commands and their parameters, or if specified, details about a specific admin command..
+        /// </summary>
+        internal static string AdminHelpSummary {
+            get {
+                return ResourceManager.GetString("AdminHelpSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
+        /// </summary>
+        internal static string ApproveEmojiRemarks {
+            get {
+                return ResourceManager.GetString("ApproveEmojiRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will approve the currently pending emoji that is requesting the specified shortcut.
+        /// </summary>
+        internal static string ApproveEmojiSummary {
+            get {
+                return ResourceManager.GetString("ApproveEmojiSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The command will fail if a role with the specified name already exists..
         /// </summary>
         internal static string CreateGroupRemarks {
@@ -169,6 +205,60 @@ namespace ShagBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
+        /// </summary>
+        internal static string ListPendingEmojisRemarks {
+            get {
+                return ResourceManager.GetString("ListPendingEmojisRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will list the currently pending emojis awaiting approval.
+        /// </summary>
+        internal static string ListPendingEmojisSummary {
+            get {
+                return ResourceManager.GetString("ListPendingEmojisSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
+        /// </summary>
+        internal static string RejectEmojiRemarks {
+            get {
+                return ResourceManager.GetString("RejectEmojiRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will reject the currently pending emoji that is requesting the specified shortcut, and will then ping the user indicating why the emoji is rejected.
+        /// </summary>
+        internal static string RejectEmojiSummary {
+            get {
+                return ResourceManager.GetString("RejectEmojiSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1) This command can be used in any channel (it is not limited only to the Bot Channel).\r\n\r\n2) This command will only remove 10 messages at a time at most..
+        /// </summary>
+        internal static string RemoveLastMessagesRemarks {
+            get {
+                return ResourceManager.GetString("RemoveLastMessagesRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will remove the last X number of messages from the current channel..
+        /// </summary>
+        internal static string RemoveLastMessagesSummary {
+            get {
+                return ResourceManager.GetString("RemoveLastMessagesSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1) You can only use this command with either a url of the image, or a single image attachment (cannot use both).\r\n\r\n2) To use the command with an image upload, first upload the image as an attachment to the bot channel. When it asks you type in an optional message with the attachment, enter the command.\r\n\r\n3) To use the command with a url of the image, you must ensure the url is a direct url to the image.\r\n\r\n4) If you upload an emoji with a shortcut name matching one that is already pending, the [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestEmojiRemarks {
@@ -183,6 +273,24 @@ namespace ShagBot {
         internal static string RequestEmojiSummary {
             get {
                 return ResourceManager.GetString("RequestEmojiSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
+        /// </summary>
+        internal static string SayRemarks {
+            get {
+                return ResourceManager.GetString("SayRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use this command to say the specified message into the bot channel..
+        /// </summary>
+        internal static string SaySummary {
+            get {
+                return ResourceManager.GetString("SaySummary", resourceCulture);
             }
         }
     }

@@ -16,6 +16,8 @@ namespace ShagBot.Modules
     {
         [Command("say")]
         [RequireBotContext(CmdChannelType.DM)]
+        [CmdSummary(nameof(Resource.SaySummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.SayRemarks), typeof(Resource))]
         public async Task MakeBotSay([Remainder] string message)
         {
             var channel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ISocketMessageChannel;
@@ -33,6 +35,8 @@ namespace ShagBot.Modules
         [Command("removemessages")]
         [Alias("rm")]
         [RequireBotContext(CmdChannelType.Any)]
+        [CmdSummary(nameof(Resource.RemoveLastMessagesSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.RemoveLastMessagesRemarks), typeof(Resource))]
         public async Task RemoveLastMessages(int numberOfMsgs)
         {
             if (Context.IsPrivate || Context.Guild.Id != CommandHandler.GuildId)

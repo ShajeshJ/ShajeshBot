@@ -143,12 +143,9 @@ namespace ShagBot.Modules
 
             roleList.WithTitle("Available Roles");
 
-            var strList = "";
+            var roles = GetJoinableGroups();
 
-            foreach(var role in GetJoinableGroups())
-            {
-                strList += role.Name + Environment.NewLine;
-            }
+            var strList = roles.Count() > 0 ? string.Join(Environment.NewLine, roles.Select(x => x.Name)) : "<No Groups Available>";
 
             roleList.WithDescription(strList);
 

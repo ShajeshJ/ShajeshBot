@@ -21,7 +21,7 @@ namespace ShagBot.Attributes
             }
             else
             {
-                return PreconditionResult.FromError(CommandHandler.IgnoreErrorOutput);
+                return PreconditionResult.FromError("This command can only be used by the admin group in Peanuts");
             }
         }
     }

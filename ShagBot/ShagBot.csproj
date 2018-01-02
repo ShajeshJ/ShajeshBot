@@ -103,8 +103,8 @@
     <Compile Include="Attributes\CmdRemarksAttribute.cs" />
     <Compile Include="Attributes\RequireAdminAttribute.cs" />
     <Compile Include="Attributes\CmdSummaryAttribute.cs" />
-    <Compile Include="Attributes\RequireBotChannelAttribute.cs" />
-    <Compile Include="Attributes\RequireDMAttribute.cs" />
+    <Compile Include="Attributes\RequireBotContextAttribute.cs" />
+    <Compile Include="Attributes\RequireDMContextAttribute.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\PendingEmojiModel.cs" />

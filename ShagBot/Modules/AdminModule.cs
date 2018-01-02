@@ -14,7 +14,7 @@ namespace ShagBot.Modules
     public class AdminModule : ModuleBase<SocketCommandContext>
     {
         [Command("say")]
-        [RequireDM]
+        [RequireDMContext]
         public async Task MakeBotSay([Remainder] string message)
         {
             var channel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ITextChannel;

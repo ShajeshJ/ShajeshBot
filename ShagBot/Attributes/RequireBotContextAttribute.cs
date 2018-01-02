@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ShagBot.Attributes
 {
-    public class RequireBotChannelAttribute : PreconditionAttribute
+    public class RequireBotContextAttribute : PreconditionAttribute
     {
         public async override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {

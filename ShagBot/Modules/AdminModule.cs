@@ -20,7 +20,7 @@ namespace ShagBot.Modules
         [CmdRemarks(nameof(Resource.SayRemarks), typeof(Resource))]
         public async Task MakeBotSay([Remainder] string message)
         {
-            var channel = Context.Client.GetChannel(GuildContext.CmdChannel) as ISocketMessageChannel;
+            var channel = Context.Client.GetChannel(GuildContext.CmdChannelId) as ISocketMessageChannel;
 
             if (channel != null)
             {
@@ -49,9 +49,9 @@ namespace ShagBot.Modules
             }
             else
             {
-                var messages = await Context.Channel.GetMessagesAsync(numberOfMsgs + 1).FlattenAsync();
+                var messages = (await Context.Channel.GetMessagesAsync(numberOfMsgs + 1).ToList()).SelectMany(x => x);
 
-                foreach(var msg in messages)
+                foreach (var msg in messages)
                 {
                     await msg.DeleteAsync();
                 }

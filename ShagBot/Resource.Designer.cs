@@ -81,6 +81,24 @@ namespace ShagBot {
         /// <summary>
         ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
         /// </summary>
+        internal static string ApproveChannelRemarks {
+            get {
+                return ResourceManager.GetString("ApproveChannelRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will approve the currently pending request that is requesting the specified channel name.
+        /// </summary>
+        internal static string ApproveChannelSummary {
+            get {
+                return ResourceManager.GetString("ApproveChannelSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
+        /// </summary>
         internal static string ApproveEmojiRemarks {
             get {
                 return ResourceManager.GetString("ApproveEmojiRemarks", resourceCulture);
@@ -207,6 +225,24 @@ namespace ShagBot {
         /// <summary>
         ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
         /// </summary>
+        internal static string ListPendingChannelsRemarks {
+            get {
+                return ResourceManager.GetString("ListPendingChannelsRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will list the currently pending channels awaiting approval.
+        /// </summary>
+        internal static string ListPendingChannelsSummary {
+            get {
+                return ResourceManager.GetString("ListPendingChannelsSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
+        /// </summary>
         internal static string ListPendingEmojisRemarks {
             get {
                 return ResourceManager.GetString("ListPendingEmojisRemarks", resourceCulture);
@@ -219,6 +255,24 @@ namespace ShagBot {
         internal static string ListPendingEmojisSummary {
             get {
                 return ResourceManager.GetString("ListPendingEmojisSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used through a DM to the bot.
+        /// </summary>
+        internal static string RejectChannelRemarks {
+            get {
+                return ResourceManager.GetString("RejectChannelRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will reject the currently pending request that is requesting the specified channel name, and will then ping the user indicating why the channel was rejected.
+        /// </summary>
+        internal static string RejectChannelSummary {
+            get {
+                return ResourceManager.GetString("RejectChannelSummary", resourceCulture);
             }
         }
         
@@ -255,6 +309,24 @@ namespace ShagBot {
         internal static string RemoveLastMessagesSummary {
             get {
                 return ResourceManager.GetString("RemoveLastMessagesSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1)  Channels can only have names containing alphanumeric characters, dashes or underscores. \r\n2) You cannot specify a channel name that exists, or is already being requested for use. \r\n3) You may optionally specify which category you would like to add the text channel under. The text channel will automatically inherit all permissions associated with this category. \r\n4) If you are getting the error &quot;Channel name not found.&quot;, it is because the specified category does not exist. You may also see this err [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string RequestChannelRemarks {
+            get {
+                return ResourceManager.GetString("RequestChannelRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use this command to request a text channel to be added to the server. Optionally specify a category to put the channel in..
+        /// </summary>
+        internal static string RequestChannelSummary {
+            get {
+                return ResourceManager.GetString("RequestChannelSummary", resourceCulture);
             }
         }
         

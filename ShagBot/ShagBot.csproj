@@ -107,8 +107,10 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="GuildContext.cs" />
+    <Compile Include="Models\PendingChannelModel.cs" />
     <Compile Include="Models\PendingEmojiModel.cs" />
     <Compile Include="Modules\AdminModule.cs" />
+    <Compile Include="Modules\ChannelModule.cs" />
     <Compile Include="Modules\EmojiModule.cs" />
     <Compile Include="Modules\InfoModule.cs" />
     <Compile Include="Modules\RoleModule.cs" />

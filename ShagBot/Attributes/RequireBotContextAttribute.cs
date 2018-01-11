@@ -25,7 +25,7 @@ namespace ShagBot.Attributes
 
             if (_channelType == CmdChannelType.BotChannel)
             {
-                if (context.Channel.Id != GuildContext.CmdChannel)
+                if (context.Channel.Id != GuildContext.CmdChannelId)
                 {
                     return PreconditionResult.FromError(CommandHandler.IgnoreErrorOutput);
                 }

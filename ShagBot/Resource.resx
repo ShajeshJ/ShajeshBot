@@ -123,6 +123,12 @@
   <data name="AdminHelpSummary" xml:space="preserve">
     <value>Returns a list of available admin commands and their parameters, or if specified, details about a specific admin command.</value>
   </data>
+  <data name="ApproveChannelRemarks" xml:space="preserve">
+    <value>This command can only be used through a DM to the bot</value>
+  </data>
+  <data name="ApproveChannelSummary" xml:space="preserve">
+    <value>This command will approve the currently pending request that is requesting the specified channel name</value>
+  </data>
   <data name="ApproveEmojiRemarks" xml:space="preserve">
     <value>This command can only be used through a DM to the bot</value>
   </data>
@@ -165,11 +171,23 @@
   <data name="ListMembersSummary" xml:space="preserve">
     <value>This command lists all the members in the specified mention group.</value>
   </data>
+  <data name="ListPendingChannelsRemarks" xml:space="preserve">
+    <value>This command can only be used through a DM to the bot</value>
+  </data>
+  <data name="ListPendingChannelsSummary" xml:space="preserve">
+    <value>This command will list the currently pending channels awaiting approval</value>
+  </data>
   <data name="ListPendingEmojisRemarks" xml:space="preserve">
     <value>This command can only be used through a DM to the bot</value>
   </data>
   <data name="ListPendingEmojisSummary" xml:space="preserve">
     <value>This command will list the currently pending emojis awaiting approval</value>
+  </data>
+  <data name="RejectChannelRemarks" xml:space="preserve">
+    <value>This command can only be used through a DM to the bot</value>
+  </data>
+  <data name="RejectChannelSummary" xml:space="preserve">
+    <value>This command will reject the currently pending request that is requesting the specified channel name, and will then ping the user indicating why the channel was rejected</value>
   </data>
   <data name="RejectEmojiRemarks" xml:space="preserve">
     <value>This command can only be used through a DM to the bot</value>
@@ -182,6 +200,12 @@
   </data>
   <data name="RemoveLastMessagesSummary" xml:space="preserve">
     <value>This command will remove the last X number of messages from the current channel.</value>
+  </data>
+  <data name="RequestChannelRemarks" xml:space="preserve">
+    <value>1)  Channels can only have names containing alphanumeric characters, dashes or underscores. \r\n2) You cannot specify a channel name that exists, or is already being requested for use. \r\n3) You may optionally specify which category you would like to add the text channel under. The text channel will automatically inherit all permissions associated with this category. \r\n4) If you are getting the error "Channel name not found.", it is because the specified category does not exist. You may also see this error if you put spaces in the channel name.</value>
+  </data>
+  <data name="RequestChannelSummary" xml:space="preserve">
+    <value>Use this command to request a text channel to be added to the server. Optionally specify a category to put the channel in.</value>
   </data>
   <data name="RequestEmojiRemarks" xml:space="preserve">
     <value>1) You can only use this command with either a url of the image, or a single image attachment (cannot use both).\r\n\r\n2) To use the command with an image upload, first upload the image as an attachment to the bot channel. When it asks you type in an optional message with the attachment, enter the command.\r\n\r\n3) To use the command with a url of the image, you must ensure the url is a direct url to the image.\r\n\r\n4) If you upload an emoji with a shortcut name matching one that is already pending, the new emoji request will replace the existing one.</value>

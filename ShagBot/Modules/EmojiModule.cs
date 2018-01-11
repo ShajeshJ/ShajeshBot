@@ -97,7 +97,7 @@ namespace ShagBot.Modules
 
             if (!_pendingEmojis.ContainsKey(shortcut))
             {
-                await ReplyAsync($"An error occurred when attempting to create the emoji request.");
+                await ReplyAsync($"An unexpected error occurred when attempting to create the emoji request.");
                 return;
             }
 
@@ -142,7 +142,7 @@ namespace ShagBot.Modules
         {
             if (!_pendingEmojis.ContainsKey(requestId))
             {
-                await ReplyAsync($"{requestId} does not correspond to an active emoji request number.");
+                await ReplyAsync($"{requestId} does not correspond to an active emoji request.");
                 return;
             }
 
@@ -165,7 +165,7 @@ namespace ShagBot.Modules
 
                         var emote = await Context.Client.GetGuild(GuildContext.GuildId).CreateEmoteAsync(emojiRequest.Shortcut, image);
 
-                        var botChannel = Context.Client.GetChannel(GuildContext.CmdChannel) as ISocketMessageChannel;
+                        var botChannel = Context.Client.GetChannel(GuildContext.CmdChannelId) as ISocketMessageChannel;
 
                         var msg = await botChannel.SendMessageAsync($"Emoji with shortcut '{emote.Name}' added successfully.");
                         await msg?.AddReactionAsync(emote);
@@ -209,7 +209,7 @@ namespace ShagBot.Modules
 
                 if (user != null)
                 {
-                    var botChannel = Context.Client.GetChannel(GuildContext.CmdChannel) as ISocketMessageChannel;
+                    var botChannel = Context.Client.GetChannel(GuildContext.CmdChannelId) as ISocketMessageChannel;
                     await botChannel.SendMessageAsync(
                         $"{user.Mention} your emoji '{emojiRequest.Url}' with shortcut '{emojiRequest.Shortcut}' was rejected. Reason: {reason}");
                 }

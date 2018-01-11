@@ -33,7 +33,7 @@ namespace ShagBot
             {
                 if (_patchnotes != null)
                 {
-                    var botChannel = guild.GetChannel(GuildContext.CmdChannel) as SocketTextChannel;
+                    var botChannel = guild.GetChannel(GuildContext.CmdChannelId) as SocketTextChannel;
                     
                     if (botChannel == null)
                     {

@@ -20,12 +20,19 @@ namespace ShagBot.Attributes
 
         public async override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            var guild = await context.Client.GetGuildAsync(CommandHandler.GuildId);
+            var guild = await context.Client.GetGuildAsync(GuildContext.GuildId);
             var user = await guild?.GetUserAsync(context.User.Id);
 
             if (_channelType == CmdChannelType.BotChannel)
             {
-                if (context.Channel.Id != CommandHandler.CmdChannel)
+                if (context.Channel.Id != GuildContext.CmdChannel)
+                {
+                    return PreconditionResult.FromError(CommandHandler.IgnoreErrorOutput);
+                }
+            }
+            else if (_channelType == CmdChannelType.GuildChannel)
+            {
+                if (context.Guild?.Id != GuildContext.GuildId)
                 {
                     return PreconditionResult.FromError(CommandHandler.IgnoreErrorOutput);
                 }
@@ -39,7 +46,7 @@ namespace ShagBot.Attributes
             }
             // else (channelType == Any), do nothing
 
-            if (user?.RoleIds.Intersect(CommandHandler.CmdRoleIds).Any() != true)
+            if (user?.RoleIds.Intersect(GuildContext.CmdRoleIds).Any() != true)
             {
                 return PreconditionResult.FromError("Only Crew members can use ShagBot");
             }
@@ -50,7 +57,7 @@ namespace ShagBot.Attributes
 
     public enum CmdChannelType
     {
-        Any = 1, 
+        GuildChannel = 1, 
         BotChannel = 2, 
         DM = 3
     }

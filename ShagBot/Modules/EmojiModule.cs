@@ -163,9 +163,9 @@ namespace ShagBot.Modules
                     {
                         var image = new Image(stream);
 
-                        var emote = await Context.Client.GetGuild(CommandHandler.GuildId).CreateEmoteAsync(emojiRequest.Shortcut, image);
+                        var emote = await Context.Client.GetGuild(GuildContext.GuildId).CreateEmoteAsync(emojiRequest.Shortcut, image);
 
-                        var botChannel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ISocketMessageChannel;
+                        var botChannel = Context.Client.GetChannel(GuildContext.CmdChannel) as ISocketMessageChannel;
 
                         var msg = await botChannel.SendMessageAsync($"Emoji with shortcut '{emote.Name}' added successfully.");
                         await msg?.AddReactionAsync(emote);
@@ -209,7 +209,7 @@ namespace ShagBot.Modules
 
                 if (user != null)
                 {
-                    var botChannel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ISocketMessageChannel;
+                    var botChannel = Context.Client.GetChannel(GuildContext.CmdChannel) as ISocketMessageChannel;
                     await botChannel.SendMessageAsync(
                         $"{user.Mention} your emoji '{emojiRequest.Url}' with shortcut '{emojiRequest.Shortcut}' was rejected. Reason: {reason}");
                 }
@@ -229,7 +229,7 @@ namespace ShagBot.Modules
 
         private async Task MessageAdmins(IEnumerable<string> msgs)
         {
-            var adminRoleId = CommandHandler.AdminRoleId;
+            var adminRoleId = GuildContext.AdminRoleId;
             var adminUsers = Context.Guild.Users.Where(x => x.Roles.Any(y => y.Id == adminRoleId));
 
             foreach (var admin in adminUsers)

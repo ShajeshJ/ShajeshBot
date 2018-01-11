@@ -106,6 +106,7 @@
     <Compile Include="Attributes\RequireBotContextAttribute.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="GuildContext.cs" />
     <Compile Include="Models\PendingEmojiModel.cs" />
     <Compile Include="Modules\AdminModule.cs" />
     <Compile Include="Modules\EmojiModule.cs" />

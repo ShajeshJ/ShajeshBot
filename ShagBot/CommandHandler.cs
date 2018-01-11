@@ -19,15 +19,8 @@ namespace ShagBot
         private CommandService _cmdService;
 
         public static readonly char CmdPrefix = '!';
-        public static readonly ulong CmdChannel = CustomConfigManager.AppSettings["Bot_Channel"].ToUInt64();
-        public static readonly ulong[] CmdRoleIds = CustomConfigManager.AppSettings["Bot_AllowedRoles"]
-                                                .Split('|').Select(x => x.Trim(' ').ToUInt64()).ToArray();
-
         public static readonly string IgnoreErrorOutput = "<Do Not Show Error Output>";
-
         public static IEnumerable<CommandInfo> Commands { get; private set; }
-        public static readonly ulong AdminRoleId = CustomConfigManager.AppSettings["Admin_Role"].ToUInt64();
-        public static readonly ulong GuildId = CustomConfigManager.AppSettings["Guild"].ToUInt64();
 
         public CommandHandler(DiscordSocketClient client)
         {

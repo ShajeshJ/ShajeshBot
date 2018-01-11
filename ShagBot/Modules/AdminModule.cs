@@ -20,7 +20,7 @@ namespace ShagBot.Modules
         [CmdRemarks(nameof(Resource.SayRemarks), typeof(Resource))]
         public async Task MakeBotSay([Remainder] string message)
         {
-            var channel = Context.Client.GetChannel(CommandHandler.CmdChannel) as ISocketMessageChannel;
+            var channel = Context.Client.GetChannel(GuildContext.CmdChannel) as ISocketMessageChannel;
 
             if (channel != null)
             {
@@ -34,12 +34,12 @@ namespace ShagBot.Modules
 
         [Command("removemessages")]
         [Alias("rm")]
-        [RequireBotContext(CmdChannelType.Any)]
+        [RequireBotContext(CmdChannelType.GuildChannel)]
         [CmdSummary(nameof(Resource.RemoveLastMessagesSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.RemoveLastMessagesRemarks), typeof(Resource))]
         public async Task RemoveLastMessages(int numberOfMsgs)
         {
-            if (Context.IsPrivate || Context.Guild.Id != CommandHandler.GuildId)
+            if (Context.IsPrivate || Context.Guild.Id != GuildContext.GuildId)
             {
                 await ReplyAsync("The command can only be executed in a Peanuts guild channel");
             }

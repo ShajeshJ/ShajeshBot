@@ -49,7 +49,7 @@ namespace ShagBot.Modules
             }
             else
             {
-                var messages = await Context.Channel.GetMessagesAsync(numberOfMsgs + 1).Flatten();
+                var messages = await Context.Channel.GetMessagesAsync(numberOfMsgs + 1).FlattenAsync();
 
                 foreach(var msg in messages)
                 {

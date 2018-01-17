@@ -367,7 +367,7 @@ namespace ShagBot {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1) This command can be used in all guild channels. \r\n2) Spoiler messages cannot be greater than 300 characters in size. \r\n3) The spoiler effect works well on desktop, but does not work as well on mobile, due to the differences in how gifs are embeded in a message..
+        ///   Looks up a localized string similar to 1) This command can be used in all guild channels. \r\n2) Spoiler messages cannot be greater than 140 characters in size. \r\n3) The spoiler effect works well on desktop, but does not work as well on mobile, due to the differences in how gifs are embeded in a message..
         /// </summary>
         internal static string SpoilerRemarks {
             get {

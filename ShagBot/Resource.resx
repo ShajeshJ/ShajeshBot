@@ -220,7 +220,7 @@
     <value>Use this command to say the specified message into the bot channel.</value>
   </data>
   <data name="SpoilerRemarks" xml:space="preserve">
-    <value>1) This command can be used in all guild channels. \r\n2) Spoiler messages cannot be greater than 300 characters in size. \r\n3) The spoiler effect works well on desktop, but does not work as well on mobile, due to the differences in how gifs are embeded in a message.</value>
+    <value>1) This command can be used in all guild channels. \r\n2) Spoiler messages cannot be greater than 140 characters in size. \r\n3) The spoiler effect works well on desktop, but does not work as well on mobile, due to the differences in how gifs are embeded in a message.</value>
   </data>
   <data name="SpoilerSummary" xml:space="preserve">
     <value>Embeds the specified message into a spoiler, that will display the hidden message on mouse hover.</value>

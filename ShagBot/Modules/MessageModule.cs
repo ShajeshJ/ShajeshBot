@@ -22,22 +22,35 @@ namespace ShagBot.Modules
         {
             await Context.Message.DeleteAsync(); //Always want to delete spoiler messages, regardless of if they are valid
 
-            if (message.Length > 300)
+            if (message.Length > 140)
             {
-                await ReplyAsync("Spoiler messages cannot be greater than 300 characters in length");
+                await ReplyAsync(Context.User.Mention + " Spoiler messages cannot be greater than 140 characters in length.");
                 return;
             }
 
             //Handle potential special escape characters (does not support new line currently)
             message = message.Replace("\r", "");
-            message = message.Replace("\n", " ");
+            message = message.Replace("\n", "");
+
+            var boxHeightPadding = 10;
+            var boxWidthPadding = 2;
+            var boxWidth = 500 + boxWidthPadding;
 
             var font = new Font(FontFamily.GenericSansSerif, 14);
             var brush = new SolidBrush(Color.FromArgb(153, 170, 181));
-            var boundingBox = new RectangleF(0, 0, 500, 250);
 
-            var hideImage = new Bitmap(500, 250);
-            var showImage = new Bitmap(500, 250);
+            var imgSizeTester = new Bitmap(1, 1);
+            var drawingSizeTester = Graphics.FromImage(imgSizeTester);
+
+            var boxHeight = (int)drawingSizeTester.MeasureString(message, font, boxWidth).Height + boxHeightPadding;
+
+            imgSizeTester.Dispose();
+            drawingSizeTester.Dispose();
+
+            var boundingBox = new RectangleF(boxWidthPadding/2, boxHeightPadding/2, boxWidth, boxHeight);
+
+            var hideImage = new Bitmap(boxWidth, boxHeight);
+            var showImage = new Bitmap(boxWidth, boxHeight);
 
             var hideDrawing = Graphics.FromImage(hideImage);
             var showDrawing = Graphics.FromImage(showImage);

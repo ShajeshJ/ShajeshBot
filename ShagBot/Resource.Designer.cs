@@ -365,5 +365,23 @@ namespace ShagBot {
                 return ResourceManager.GetString("SaySummary", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spoiler messages cannot be greater than 300 characters in size. Also, the spoiler effect works well on desktop, but does not work as well on mobile, due to the differences in how gifs are embeded in a message..
+        /// </summary>
+        internal static string SpoilerRemarks {
+            get {
+                return ResourceManager.GetString("SpoilerRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Embeds the specified message into a spoiler, that will display the hidden message on mouse hover..
+        /// </summary>
+        internal static string SpoilerSummary {
+            get {
+                return ResourceManager.GetString("SpoilerSummary", resourceCulture);
+            }
+        }
     }
 }

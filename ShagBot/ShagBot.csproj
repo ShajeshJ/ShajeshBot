@@ -109,6 +109,7 @@
     <Compile Include="Attributes\CmdSummaryAttribute.cs" />
     <Compile Include="Attributes\RequireBotContextAttribute.cs" />
     <Compile Include="CommandHandler.cs" />
+    <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="GuildContext.cs" />
     <Compile Include="Models\PendingChannelModel.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Modules\EmojiModule.cs" />
     <Compile Include="Modules\InfoModule.cs" />
     <Compile Include="Modules\MessageModule.cs" />
+    <Compile Include="Modules\MiscModule.cs" />
     <Compile Include="Modules\RoleModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -128,6 +130,7 @@
     </Compile>
     <Compile Include="ShagBot.cs" />
     <Compile Include="Utilities\CustomConfigManager.cs" />
+    <Compile Include="Utilities\SudokuGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

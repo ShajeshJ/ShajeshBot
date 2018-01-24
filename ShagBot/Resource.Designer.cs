@@ -383,5 +383,14 @@ namespace ShagBot {
                 return ResourceManager.GetString("SpoilerSummary", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The command will randomly generate a sudoku puzzle image.
+        /// </summary>
+        internal static string SudokuSummary {
+            get {
+                return ResourceManager.GetString("SudokuSummary", resourceCulture);
+            }
+        }
     }
 }

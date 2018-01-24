@@ -225,4 +225,7 @@
   <data name="SpoilerSummary" xml:space="preserve">
     <value>Embeds the specified message into a spoiler, that will display the hidden message on mouse hover.</value>
   </data>
+  <data name="SudokuSummary" xml:space="preserve">
+    <value>The command will randomly generate a sudoku puzzle image</value>
+  </data>
 </root>

@@ -14,6 +14,7 @@ namespace ShagBot.Modules
     {
         [Command("sudoku")]
         [RequireBotContext(CmdChannelType.BotChannel)]
+        [CmdSummary(nameof(Resource.SudokuSummary), typeof(Resource))]
         public async Task GenerateSudokuPuzzle()
         {
             var sudokuGen = new SudokuGenerator();

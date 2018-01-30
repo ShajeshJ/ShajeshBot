@@ -35,5 +35,24 @@ namespace ShagBot.Modules
 
             File.Delete($"sudoku{sudokuIdx}.png");
         }
+        
+        [Command("dice")]
+        [Alias("roll")]
+        [RequireBotContext(CmdChannelType.BotChannel)]
+        [CmdSummary(nameof(Resource.DiceSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.DiceRemarks), typeof(Resource))]
+        public async Task GenRandomNumber(int min, int max)
+        {
+            if (min > max)
+            {
+                await ReplyAsync("Min value must be less than max value.");
+                return;
+            }
+
+            var rand = new Random();
+            var value = rand.Next(min, max + 1);
+
+            await ReplyAsync($"Rolled: {value}");
+        }
     }
 }

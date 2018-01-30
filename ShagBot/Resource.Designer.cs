@@ -151,6 +151,24 @@ namespace ShagBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error will be returned if the provided values aren&apos;t integers, or if the minimum value exceeds the maximum value..
+        /// </summary>
+        internal static string DiceRemarks {
+            get {
+                return ResourceManager.GetString("DiceRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will return a random integer between the minimum and maximum values inclusively..
+        /// </summary>
+        internal static string DiceSummary {
+            get {
+                return ResourceManager.GetString("DiceSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Returns a list of available commands and their parameters, or if specified, details about a specific command..
         /// </summary>
         internal static string HelpSummary {

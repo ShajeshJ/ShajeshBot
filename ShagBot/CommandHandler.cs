@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using ShagBot.Extensions;
 using ShagBot.Utilities;
 using System;
@@ -52,7 +53,11 @@ namespace ShagBot
 
             if (msg.HasCharPrefix(CmdPrefix, ref argPos))
             {
-                var result = await _cmdService.ExecuteAsync(context, argPos);
+                var services = new ServiceCollection()
+                                    .AddSingleton(context)
+                                    .BuildServiceProvider();
+
+                var result = await _cmdService.ExecuteAsync(context, argPos, services);
 
                 var noError = result.IsSuccess
                             || result.Error == CommandError.UnknownCommand

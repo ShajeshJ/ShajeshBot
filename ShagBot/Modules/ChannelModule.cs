@@ -36,9 +36,9 @@ namespace ShagBot.Modules
             _pendingChannels = new ConcurrentDictionary<string, PendingChannelModel>();
         }
 
-        public ChannelModule()
+        public ChannelModule(SocketCommandContext context)
         {
-            _util = new DiscordUtilities(Context);
+            _util = new DiscordUtilities(context);
         }
 
         [Command("requestchannel")]

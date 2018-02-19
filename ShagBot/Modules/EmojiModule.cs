@@ -37,9 +37,9 @@ namespace ShagBot.Modules
             _pendingEmojis = new ConcurrentDictionary<string, PendingEmojiModel>();
         }
 
-        public EmojiModule()
+        public EmojiModule(SocketCommandContext context)
         {
-            _util = new DiscordUtilities(Context);
+            _util = new DiscordUtilities(context);
         }
 
         [Command("requestemoji")]

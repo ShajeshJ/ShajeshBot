@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using ShagBot.Attributes;
 using ShagBot.Extensions;
 using ShagBot.Models;
+using ShagBot.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace ShagBot.Modules
 {
     public class ChannelModule : ModuleBase<SocketCommandContext>
     {
+        private DiscordUtilities _util;
+
         private static ConcurrentDictionary<string, PendingChannelModel> _pendingChannels
         {
             get
@@ -31,6 +34,11 @@ namespace ShagBot.Modules
         static ChannelModule()
         {
             _pendingChannels = new ConcurrentDictionary<string, PendingChannelModel>();
+        }
+
+        public ChannelModule()
+        {
+            _util = new DiscordUtilities(Context);
         }
 
         [Command("requestchannel")]
@@ -76,7 +84,7 @@ namespace ShagBot.Modules
             {
                 adminMsg += $" in the {category.Name} category";
             }
-            await MessageAdmins(adminMsg);
+            await _util.MessageAdmins(adminMsg);
 
             await ReplyAsync("Channel request has been created successfully.");
         }
@@ -193,25 +201,6 @@ namespace ShagBot.Modules
         {
             Regex channelPattern = new Regex(@"^[a-zA-Z0-9_\\-]*$");
             return channelPattern.IsMatch(name);
-        }
-
-        private async Task MessageAdmins(string msg)
-        {
-            await MessageAdmins(new string[] { msg });
-        }
-
-        private async Task MessageAdmins(IEnumerable<string> msgs)
-        {
-            var adminRoleId = GuildContext.AdminRoleId;
-            var adminUsers = Context.Guild.Users.Where(x => x.Roles.Any(y => y.Id == adminRoleId));
-
-            foreach (var admin in adminUsers)
-            {
-                foreach (var msg in msgs)
-                {
-                    await admin.SendMessageAsync(msg);
-                }
-            }
         }
     }
 }

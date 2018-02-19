@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using ShagBot.Attributes;
 using ShagBot.Models;
+using ShagBot.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace ShagBot.Modules
 {
     public class EmojiModule : ModuleBase<SocketCommandContext>
     {
-        private Random _rand;
+        private DiscordUtilities _util;
+
         private static ConcurrentDictionary<string, PendingEmojiModel> _pendingEmojis
         {
             get
@@ -37,7 +39,7 @@ namespace ShagBot.Modules
 
         public EmojiModule()
         {
-            _rand = new Random();
+            _util = new DiscordUtilities(Context);
         }
 
         [Command("requestemoji")]
@@ -103,12 +105,12 @@ namespace ShagBot.Modules
 
             if (isAddRequest)
             {
-                await MessageAdmins($"{Context.User.Username} requested to add the emoji {url} with shortcut '{shortcut}'.");
+                await _util.MessageAdmins($"{Context.User.Username} requested to add the emoji {url} with shortcut '{shortcut}'.");
                 await ReplyAsync("Emoji request has been created successfully.");
             }
             else
             {
-                await MessageAdmins($"{Context.User.Username} requested {url} to be used as the emoji for emoji request with shortcut '{shortcut}'.");
+                await _util.MessageAdmins($"{Context.User.Username} requested {url} to be used as the emoji for emoji request with shortcut '{shortcut}'.");
                 await ReplyAsync($"Emoji request with shortcut '{shortcut}' was successfully updated with the emoji {url}.");
             }
         }
@@ -157,27 +159,16 @@ namespace ShagBot.Modules
             {
                 var client = new WebClient();
 
-                try
+                using (var stream = client.OpenRead(emojiRequest.Url))
                 {
-                    using (var stream = client.OpenRead(emojiRequest.Url))
-                    {
-                        var image = new Image(stream);
+                    var image = new Image(stream);
 
-                        var emote = await Context.Client.GetGuild(GuildContext.GuildId).CreateEmoteAsync(emojiRequest.Shortcut, image);
+                    var emote = await Context.Client.GetGuild(GuildContext.GuildId).CreateEmoteAsync(emojiRequest.Shortcut, image);
 
-                        var botChannel = Context.Client.GetChannel(GuildContext.CmdChannelId) as ISocketMessageChannel;
+                    var botChannel = Context.Client.GetChannel(GuildContext.CmdChannelId) as ISocketMessageChannel;
 
-                        var msg = await botChannel.SendMessageAsync($"Emoji with shortcut '{emote.Name}' added successfully.");
-                        await msg?.AddReactionAsync(emote);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await ReplyAsync($"An error occurred when trying to process the image from url '{emojiRequest.Url}'");
-                    await MessageAdmins(new string[] {
-                        $"Exception thrown by request with shortcut {emojiRequest.Shortcut} with url {emojiRequest.Url}.",
-                        $"Exception: {ex.Message}"
-                    });
+                    var msg = await botChannel.SendMessageAsync($"Emoji with shortcut '{emote.Name}' added successfully.");
+                    await msg?.AddReactionAsync(emote);
                 }
             }
         }
@@ -220,25 +211,6 @@ namespace ShagBot.Modules
         {
             Regex alphaNumericPattern = new Regex(@"^[a-zA-Z0-9_]*$");
             return alphaNumericPattern.IsMatch(str);
-        }
-
-        private async Task MessageAdmins(string msg)
-        {
-            await MessageAdmins(new string[] { msg });
-        }
-
-        private async Task MessageAdmins(IEnumerable<string> msgs)
-        {
-            var adminRoleId = GuildContext.AdminRoleId;
-            var adminUsers = Context.Guild.Users.Where(x => x.Roles.Any(y => y.Id == adminRoleId));
-
-            foreach (var admin in adminUsers)
-            {
-                foreach (var msg in msgs)
-                {
-                    await admin.SendMessageAsync(msg);
-                }
-            }
         }
     }
 }

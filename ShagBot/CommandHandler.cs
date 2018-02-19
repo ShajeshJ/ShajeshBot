@@ -65,7 +65,16 @@ namespace ShagBot
 
                 if (!noError)
                 {
-                    await context.Channel.SendMessageAsync(result.ErrorReason);
+                    if (result.Error == CommandError.Exception)
+                    {
+                        var utilities = new DiscordUtilities(context);
+                        await utilities.MessageAdmins($"Error caused by command: '{msg.Content}'\r\nException: '{result.ErrorReason}'");
+                        await context.Channel.SendMessageAsync("An unexpected error occurred.");
+                    }
+                    else
+                    {
+                        await context.Channel.SendMessageAsync(result.ErrorReason);
+                    }
                 }
             }
         }

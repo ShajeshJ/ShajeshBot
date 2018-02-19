@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using System;
 using ShagBot.Attributes;
 using ShagBot.Extensions;
+using AwsDB;
+using AwsDB.Models;
+using Amazon.DynamoDBv2.Model;
 
 namespace ShagBot.Modules
 {
@@ -37,8 +40,15 @@ namespace ShagBot.Modules
                 x.Mentionable = true;
             });
 
-            var botUser = Context.Guild.GetUser(Context.Client.CurrentUser.Id);
-            await botUser.AddRoleAsync(role);
+            var dbRoleObj = new MentionRole()
+            {
+                RoleId = role.Id,
+                Name = role.Name
+            };
+
+            var db = new AwsDbContext();
+            await db.Upsert(dbRoleObj);
+            
             await Context.Channel.SendMessageAsync($"\"{roleName}\" created successfully.");
         }
 
@@ -51,7 +61,7 @@ namespace ShagBot.Modules
         {
             var user = Context.User as IGuildUser;
             
-            if (GetJoinableGroupIds().Contains(role.Id))
+            if (await IsJoinableGroup(role.Id))
             {
                 await user.AddRoleAsync(role);
                 await Context.Channel.SendMessageAsync($"Joined \"{role.Name}\" successfully");
@@ -75,7 +85,7 @@ namespace ShagBot.Modules
             {
                 await Context.Channel.SendMessageAsync($"You are not part of group \"{role.Name}\"");
             }
-            else if (GetJoinableGroupIds().Contains(role.Id))
+            else if (await IsJoinableGroup(role.Id))
             {
                 await user.RemoveRoleAsync(role);
                 await Context.Channel.SendMessageAsync($"Left \"{role.Name}\" successfully");
@@ -93,7 +103,7 @@ namespace ShagBot.Modules
         [CmdRemarks(nameof(Resource.DeleteGroupRemarks), typeof(Resource))]
         public async Task DeleteMentionGroup([Remainder]IRole role)
         {
-            if (!GetJoinableGroupIds().Contains(role.Id))
+            if (!await IsJoinableGroup(role.Id))
             {
                 await ReplyAsync($"Cannot delete group \"{role.Name}\" as it is not a custom mention group.");
             }
@@ -103,6 +113,11 @@ namespace ShagBot.Modules
             }
             else
             {
+                var db = new AwsDbContext();
+                var dbRoleObj = new MentionRole();
+                dbRoleObj.RoleId = role.Id;
+                await db.Delete(dbRoleObj);
+
                 await role.DeleteAsync();
                 await ReplyAsync($"Mention group deleted successfully.");
             }
@@ -115,7 +130,7 @@ namespace ShagBot.Modules
         [CmdRemarks(nameof(Resource.ListMembersRemarks), typeof(Resource))]
         public async Task ListMentionGroupMembers([Remainder]IRole role)
         {
-            if (GetJoinableGroupIds().Contains(role.Id))
+            if (await IsJoinableGroup(role.Id))
             {
                 var members = Context.Guild.Users.Where(u => !u.IsBot && u.Roles.Select(r => r.Id).Contains(role.Id));
 
@@ -143,7 +158,7 @@ namespace ShagBot.Modules
 
             roleList.WithTitle("Available Roles");
 
-            var roles = GetJoinableGroups();
+            var roles = await GetJoinableGroups();
 
             var strList = roles.Count() > 0 ? string.Join(Environment.NewLine, roles.Select(x => x.Name)) : "<No Groups Available>";
 
@@ -152,15 +167,17 @@ namespace ShagBot.Modules
             await Context.Channel.SendMessageAsync("", embed: roleList.Build());
         }
 
-        private IEnumerable<ulong> GetJoinableGroupIds()
+        private async Task<bool> IsJoinableGroup(ulong id)
         {
-            return GetJoinableGroups().Select(x => x.Id);
+            var db = new AwsDbContext();
+
+            return await db.Exists<MentionRole>(new AttributeValue() { N = id.ToString() });
         }
 
-        private IEnumerable<IRole> GetJoinableGroups()
+        private async Task<IEnumerable<MentionRole>> GetJoinableGroups()
         {
-            var bot = Context.Guild.GetUser(Context.Client.CurrentUser.Id);
-            return bot.Roles.Where(x => !x.IsManaged && !x.IsEveryone);
+            var db = new AwsDbContext();
+            return await db.GetAll<MentionRole>();
         }
     }
 }

@@ -49,6 +49,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.DynamoDBv2, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604" />
     <Reference Include="Discord.Net.Commands, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Discord.Net.Commands.2.0.0-beta-00876\lib\netstandard1.1\Discord.Net.Commands.dll</HintPath>
     </Reference>
@@ -131,6 +132,7 @@
     <Compile Include="ShagBot.cs" />
     <Compile Include="Utilities\CustomConfigManager.cs" />
     <Compile Include="Utilities\SudokuGenerator.cs" />
+    <Compile Include="Utilities\DiscordUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -168,6 +170,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AwsDB\AwsDB.csproj">
+      <Project>{42068e94-fb22-402e-9d75-7a17012be0a8}</Project>
+      <Name>AwsDB</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.VisualStudio.SlowCheetah.3.0.61\build\Microsoft.VisualStudio.SlowCheetah.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SlowCheetah.3.0.61\build\Microsoft.VisualStudio.SlowCheetah.targets')" />

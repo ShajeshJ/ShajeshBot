@@ -385,24 +385,6 @@ namespace ShagBot {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1) This command can be used in all guild channels. \r\n2) Spoiler messages cannot be greater than 140 characters in size. \r\n3) The spoiler effect works well on desktop, but does not work as well on mobile, due to the differences in how gifs are embeded in a message..
-        /// </summary>
-        internal static string SpoilerRemarks {
-            get {
-                return ResourceManager.GetString("SpoilerRemarks", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Embeds the specified message into a spoiler, that will display the hidden message on mouse hover..
-        /// </summary>
-        internal static string SpoilerSummary {
-            get {
-                return ResourceManager.GetString("SpoilerSummary", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The command will randomly generate a sudoku puzzle image.
         /// </summary>
         internal static string SudokuSummary {

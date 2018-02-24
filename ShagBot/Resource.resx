@@ -202,7 +202,7 @@
     <value>This command will reject the currently pending emoji that is requesting the specified shortcut, and will then ping the user indicating why the emoji is rejected</value>
   </data>
   <data name="RemoveLastMessagesRemarks" xml:space="preserve">
-    <value>1) This command can be used in any channel (it is not limited only to the Bot Channel).\r\n\r\n2) This command will only remove 10 messages at a time at most.</value>
+    <value>1) You must pass in either "true" or "false" as the value for the suppressMessage parameter.\r\n2) This command can be used in any channel (it is not limited only to the Bot Channel).\r\n3) This command will only remove 99 messages at a time at most.</value>
   </data>
   <data name="RemoveLastMessagesSummary" xml:space="preserve">
     <value>This command will remove the last X number of messages from the current channel.</value>

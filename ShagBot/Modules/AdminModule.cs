@@ -37,26 +37,32 @@ namespace ShagBot.Modules
         [RequireBotContext(CmdChannelType.GuildChannel)]
         [CmdSummary(nameof(Resource.RemoveLastMessagesSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.RemoveLastMessagesRemarks), typeof(Resource))]
-        public async Task RemoveLastMessages(int numberOfMsgs)
+        public async Task RemoveLastMessages(int numberOfMsgs, bool suppressMessage = false)
         {
             if (Context.IsPrivate || Context.Guild.Id != GuildContext.GuildId)
             {
                 await ReplyAsync("The command can only be executed in a Peanuts guild channel");
             }
-            else if (numberOfMsgs < 1 || numberOfMsgs > 10)
+            else if (numberOfMsgs < 1 || numberOfMsgs > 99)
             {
-                await ReplyAsync("Requested number of messages to delete must be between 1 to 10 inclusive.");
+                await ReplyAsync("Requested number of messages to delete must be between 1 to 99 inclusive.");
             }
             else
             {
                 var messages = (await Context.Channel.GetMessagesAsync(numberOfMsgs + 1).ToList()).SelectMany(x => x);
+                var tasklist = new List<Task>();
 
                 foreach (var msg in messages)
                 {
-                    await msg.DeleteAsync();
+                    tasklist.Add(msg.DeleteAsync());
                 }
 
-                await ReplyAsync($"{numberOfMsgs} Messages deleted successfully.");
+                Task.WaitAll(tasklist.ToArray());
+
+                if (!suppressMessage)
+                {
+                    await ReplyAsync($"{numberOfMsgs} Messages deleted successfully.");
+                }
             }
         }
     }

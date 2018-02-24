@@ -313,7 +313,7 @@ namespace ShagBot {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1) This command can be used in any channel (it is not limited only to the Bot Channel).\r\n\r\n2) This command will only remove 10 messages at a time at most..
+        ///   Looks up a localized string similar to 1) You must pass in either &quot;true&quot; or &quot;false&quot; as the value for the suppressMessage parameter.\r\n2) This command can be used in any channel (it is not limited only to the Bot Channel).\r\n3) This command will only remove 99 messages at a time at most..
         /// </summary>
         internal static string RemoveLastMessagesRemarks {
             get {

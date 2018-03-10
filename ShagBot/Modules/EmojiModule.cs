@@ -201,8 +201,14 @@ namespace ShagBot.Modules
                 if (user != null)
                 {
                     var botChannel = Context.Client.GetChannel(GuildContext.CmdChannelId) as ISocketMessageChannel;
+
+                    var embededMsg = new EmbedBuilder();
+                    embededMsg.Title = "Reason";
+                    embededMsg.Description = reason;
+
                     await botChannel.SendMessageAsync(
-                        $"{user.Mention} your emoji '{emojiRequest.Url}' with shortcut '{emojiRequest.Shortcut}' was rejected. Reason: {reason}");
+                        $"{user.Mention} your emoji '{emojiRequest.Url}' with shortcut '{emojiRequest.Shortcut}' was rejected.", 
+                        embed: embededMsg.Build());
                 }
             }
         }

@@ -166,8 +166,14 @@ namespace ShagBot.Modules
                 if (user != null)
                 {
                     var botChannel = Context.Client.GetChannel(GuildContext.CmdChannelId) as ISocketMessageChannel;
+
+                    var embededMsg = new EmbedBuilder();
+                    embededMsg.Title = "Reason";
+                    embededMsg.Description = reason;
+
                     await botChannel.SendMessageAsync(
-                        $"{user.Mention}'s request for the text channel {channelRequest.ChannelName} was rejected. Reason: {reason}");
+                        $"{user.Mention}'s request for the text channel {channelRequest.ChannelName} was rejected.", 
+                        embed: embededMsg.Build());
                 }
             }
         }

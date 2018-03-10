@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using ShagBot.Extensions;
 using ShagBot.Utilities;
+using System;
 using System.Collections.Concurrent;
 using System.Configuration;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace ShagBot
         public async Task StartAsync()
         {
             _handler = new CommandHandler(_client);
-            await _client.LoginAsync(TokenType.Bot, CustomConfigManager.AppSettings["Bot_Token"]);
+            await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("SHAGBOT_TOKEN"));
             await _client.SetGameAsync(CommandHandler.CmdPrefix + "help");
             await _client.StartAsync();
             _client.GuildAvailable += async (guild) =>

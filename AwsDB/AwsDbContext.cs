@@ -64,9 +64,9 @@ namespace AwsDB
             return await iterator.GetRemainingAsync();
         }
 
-        public async Task Delete<T>(T dbRoleObj) where T : IAwsDbItem
+        public async Task Delete<T>(T item) where T : IAwsDbItem
         {
-            await _context.DeleteAsync(dbRoleObj);
+            await _context.DeleteAsync(item);
         }
     }
 }

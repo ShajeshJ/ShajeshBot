@@ -21,7 +21,7 @@ namespace ShagBot.Modules
         [Command("help")]
         [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.HelpSummary), typeof(Resource))]
-        public async Task ShowHelp(string commandName = null)
+        public async Task ShowHelp([Remainder]string commandName = null)
         {
             if (commandName == null)
             {
@@ -118,7 +118,7 @@ namespace ShagBot.Modules
         [RequireBotContext(CmdChannelType.DM)]
         [CmdSummary(nameof(Resource.AdminHelpSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.AdminHelpRemarks), typeof(Resource))]
-        public async Task ShowAdminHelp(string commandName = null)
+        public async Task ShowAdminHelp([Remainder]string commandName = null)
         {
             if (commandName == null)
             {

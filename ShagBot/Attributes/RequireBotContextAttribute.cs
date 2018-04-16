@@ -44,6 +44,13 @@ namespace ShagBot.Attributes
                     return PreconditionResult.FromError(CommandHandler.IgnoreErrorOutput);
                 }
             }
+            else if (_channelType == CmdChannelType.BnsChannel)
+            {
+                if (context.Channel.Id != GuildContext.BnsChannelId)
+                {
+                    return PreconditionResult.FromError(CommandHandler.IgnoreErrorOutput);
+                }
+            }
             // else (channelType == Any), do nothing
 
             if (user?.RoleIds.Intersect(GuildContext.CmdRoleIds).Any() != true)
@@ -59,6 +66,7 @@ namespace ShagBot.Attributes
     {
         GuildChannel = 1, 
         BotChannel = 2, 
-        DM = 3
+        DM = 3, 
+        BnsChannel = 4
     }
 }

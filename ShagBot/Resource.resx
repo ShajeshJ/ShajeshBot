@@ -135,6 +135,12 @@
   <data name="ApproveEmojiSummary" xml:space="preserve">
     <value>This command will approve the currently pending emoji that is requesting the specified shortcut</value>
   </data>
+  <data name="BnsDailiesRemarks" xml:space="preserve">
+    <value>1) This command is restricted for use in the bns channel only.\r\n\r\n2) To request today's dailies, do not specify any input parameters.\r\n\r\n3) Long and short forms for days the of week can be used in the [day] parameter, and can have any casing.\r\n\r\n4) To get extra details for each daily, set the [detailed] parameter to "true".\r\n\r\n5) Quests are sorted in descending order by gold rewards.</value>
+  </data>
+  <data name="BnsDailiesSummary" xml:space="preserve">
+    <value>Use this command to get a list of the daily challenge quests for today or a specified day in Blade &amp; Soul.\r\n**Usage Examples:**\r\n!dailies\r\n!dailies sun\r\n!dailies Monday\r\n!dailies sat true</value>
+  </data>
   <data name="CreateGroupRemarks" xml:space="preserve">
     <value>The command will fail if a role with the specified name already exists.</value>
   </data>

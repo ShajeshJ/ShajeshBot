@@ -115,6 +115,24 @@ namespace ShagBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1) This command is restricted for use in the bns channel only.\r\n\r\n2) To request today&apos;s dailies, do not specify any input parameters.\r\n\r\n3) Long and short forms for days the of week can be used in the [day] parameter, and can have any casing.\r\n\r\n4) To get extra details for each daily, set the [detailed] parameter to &quot;true&quot;.\r\n\r\n5) Quests are sorted in descending order by gold rewards..
+        /// </summary>
+        internal static string BnsDailiesRemarks {
+            get {
+                return ResourceManager.GetString("BnsDailiesRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use this command to get a list of the daily challenge quests for today or a specified day in Blade &amp; Soul.\r\n**Usage Examples:**\r\n!dailies\r\n!dailies sun\r\n!dailies Monday\r\n!dailies sat true.
+        /// </summary>
+        internal static string BnsDailiesSummary {
+            get {
+                return ResourceManager.GetString("BnsDailiesSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The command will fail if a role with the specified name already exists..
         /// </summary>
         internal static string CreateGroupRemarks {

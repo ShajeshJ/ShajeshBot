@@ -17,8 +17,6 @@ namespace ShagBot.Modules
 {
     public class ChannelModule : ModuleBase<SocketCommandContext>
     {
-        private DiscordUtilities _util;
-
         private static ConcurrentDictionary<string, PendingChannelModel> _pendingChannels
         {
             get
@@ -34,11 +32,6 @@ namespace ShagBot.Modules
         static ChannelModule()
         {
             _pendingChannels = new ConcurrentDictionary<string, PendingChannelModel>();
-        }
-
-        public ChannelModule(SocketCommandContext context)
-        {
-            _util = new DiscordUtilities(context);
         }
 
         [Command("requestchannel")]
@@ -84,7 +77,7 @@ namespace ShagBot.Modules
             {
                 adminMsg += $" in the {category.Name} category";
             }
-            await _util.MessageAdmins(adminMsg);
+            await Context.Guild.MessageAdmins(adminMsg);
 
             await ReplyAsync("Channel request has been created successfully.");
         }

@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using ShagBot.Attributes;
+using ShagBot.Extensions;
 using ShagBot.Models;
 using ShagBot.Utilities;
 using System;
@@ -18,8 +19,6 @@ namespace ShagBot.Modules
 {
     public class EmojiModule : ModuleBase<SocketCommandContext>
     {
-        private DiscordUtilities _util;
-
         private static ConcurrentDictionary<string, PendingEmojiModel> _pendingEmojis
         {
             get
@@ -35,11 +34,6 @@ namespace ShagBot.Modules
         static EmojiModule()
         {
             _pendingEmojis = new ConcurrentDictionary<string, PendingEmojiModel>();
-        }
-
-        public EmojiModule(SocketCommandContext context)
-        {
-            _util = new DiscordUtilities(context);
         }
 
         [Command("requestemoji")]
@@ -105,12 +99,12 @@ namespace ShagBot.Modules
 
             if (isAddRequest)
             {
-                await _util.MessageAdmins($"{Context.User.Username} requested to add the emoji {url} with shortcut '{shortcut}'.");
+                await Context.Guild.MessageAdmins($"{Context.User.Username} requested to add the emoji {url} with shortcut '{shortcut}'.");
                 await ReplyAsync("Emoji request has been created successfully.");
             }
             else
             {
-                await _util.MessageAdmins($"{Context.User.Username} requested {url} to be used as the emoji for emoji request with shortcut '{shortcut}'.");
+                await Context.Guild.MessageAdmins($"{Context.User.Username} requested {url} to be used as the emoji for emoji request with shortcut '{shortcut}'.");
                 await ReplyAsync($"Emoji request with shortcut '{shortcut}' was successfully updated with the emoji {url}.");
             }
         }

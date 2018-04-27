@@ -116,6 +116,7 @@
     <Compile Include="Attributes\RequireBotContextAttribute.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
+    <Compile Include="Extensions\SocketGuildExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="GuildContext.cs" />
     <Compile Include="Models\PendingChannelModel.cs" />
@@ -138,7 +139,6 @@
     <Compile Include="ShagBot.cs" />
     <Compile Include="Utilities\CustomConfigManager.cs" />
     <Compile Include="Utilities\SudokuGenerator.cs" />
-    <Compile Include="Utilities\DiscordUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

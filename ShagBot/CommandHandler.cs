@@ -27,7 +27,7 @@ namespace ShagBot
         {
             _client = client;
             _cmdService = new CommandService();
-            _cmdService.AddModulesAsync(Assembly.GetEntryAssembly());
+            _cmdService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
             Commands = _cmdService.Commands;
 
             _client.MessageReceived += HandleCommandAsync;
@@ -53,11 +53,7 @@ namespace ShagBot
 
             if (msg.HasCharPrefix(CmdPrefix, ref argPos))
             {
-                var services = new ServiceCollection()
-                                    .AddSingleton(context)
-                                    .BuildServiceProvider();
-
-                var result = await _cmdService.ExecuteAsync(context, argPos, services);
+                var result = await _cmdService.ExecuteAsync(context, argPos, null);
 
                 var noError = result.IsSuccess
                             || result.Error == CommandError.UnknownCommand
@@ -72,8 +68,7 @@ namespace ShagBot
                 {
                     if (result.Error == CommandError.Exception)
                     {
-                        var utilities = new DiscordUtilities(context);
-                        await utilities.MessageAdmins($"Error caused by command: '{msg.Content}'\r\nException: '{result.ErrorReason}'");
+                        await context.Guild.MessageAdmins($"Error caused by command: '{msg.Content}'\r\nException: '{result.ErrorReason}'");
                         await context.Channel.SendMessageAsync("An unexpected error occurred.");
                     }
                     else

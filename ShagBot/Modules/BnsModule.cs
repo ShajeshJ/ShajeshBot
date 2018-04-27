@@ -25,6 +25,22 @@ namespace ShagBot.Modules
             new string[] { "6", "saturday", "sat" }
         };
 
+        private string GoldIcon
+        {
+            get
+            {
+                return Context.Guild.Emotes.FirstOrDefault(e => e.Name == "bns_gold").ToString() ?? "gold";
+            }
+        }
+
+        private string SilverIcon
+        {
+            get
+            {
+                return Context.Guild.Emotes.FirstOrDefault(e => e.Name == "bns_silver").ToString() ?? "silver";
+            }
+        }
+
         [Command("bns dailies")]
         [Alias("dailies")]
         [RequireBotContext(CmdChannelType.BnsChannel)]
@@ -95,7 +111,7 @@ namespace ShagBot.Modules
             foreach (var daily in dailies)
             {
                 var copper = daily.gold % 100;
-                var silver = (daily.gold / 100) % 100;
+                var silver = (daily.gold / 100) % 100 + (copper < 50 ? 0 : 1);
                 var gold = (daily.gold / 10000) % 100;
 
                 var field = new EmbedFieldBuilder();
@@ -103,7 +119,7 @@ namespace ShagBot.Modules
 
                 if (detailed)
                 {
-                    field.Value = $"{daily.location}\r\n{gold} gold | {silver} silver | {copper} copper\r\n{daily.xp} XP";
+                    field.Value = $"{daily.location}\r\n{gold} {GoldIcon} {silver} {SilverIcon}\r\n{daily.xp} XP";
                 }
                 else
                 {

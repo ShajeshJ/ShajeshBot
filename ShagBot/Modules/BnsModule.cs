@@ -1,13 +1,9 @@
-﻿using Discord;
+﻿using BnsApis;
+using Discord;
 using Discord.Commands;
-using Newtonsoft.Json;
 using ShagBot.Attributes;
-using ShagBot.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ShagBot.Modules
@@ -92,17 +88,8 @@ namespace ShagBot.Modules
                 }
             }
 
-            var url = $"https://api.silveress.ie/bns/v3/dungeons/quests?daily_challenge={parsedDay.ToString()}";
-
-            var client = new HttpClient();
-
-            var response = await client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-
-            var jsonBody = await response.Content.ReadAsStringAsync();
-
-            var body = JsonConvert.DeserializeObject<DailyQuest[]>(jsonBody);
-            var dailies = body.OrderByDescending(d => d.gold).ToList();
+            var questApi = new QuestApi();
+            var dailies = await questApi.GetDailyChallenge(parsedDay);
 
             var embed = new EmbedBuilder();
 
@@ -110,20 +97,16 @@ namespace ShagBot.Modules
 
             foreach (var daily in dailies)
             {
-                var copper = daily.gold % 100;
-                var silver = (daily.gold / 100) % 100 + (copper < 50 ? 0 : 1);
-                var gold = (daily.gold / 10000) % 100;
-
                 var field = new EmbedFieldBuilder();
-                field.Name = daily.quest;
+                field.Name = daily.Quest;
 
                 if (detailed)
                 {
-                    field.Value = $"{daily.location}\r\n{gold} {GoldIcon} {silver} {SilverIcon}\r\n{daily.xp} XP";
+                    field.Value = $"{daily.Location}\r\n{daily.GoldPortion} {GoldIcon} {daily.SilverPortion} {SilverIcon}\r\n{daily.XP} XP";
                 }
                 else
                 {
-                    field.Value = daily.location;
+                    field.Value = daily.Location;
                 }
 
                 embed.AddField(field);
@@ -131,13 +114,13 @@ namespace ShagBot.Modules
 
             await ReplyAsync("", embed: embed.Build());
         }
-    }
 
-    class DailyQuest
-    {
-        public string quest { get; set; }
-        public string location { get; set; }
-        public int gold { get; set; }
-        public string xp { get; set; }
+        [Command("bns mp")]
+        [Alias("mp")]
+        [RequireBotContext(CmdChannelType.BnsChannel)]
+        public async Task GetMarketplaceValue(string item)
+        {
+
+        }
     }
 }

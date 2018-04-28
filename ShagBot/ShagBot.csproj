@@ -183,6 +183,10 @@
       <Project>{42068e94-fb22-402e-9d75-7a17012be0a8}</Project>
       <Name>AwsDB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BnsApis\BnsApis.csproj">
+      <Project>{E021561A-E849-43EC-921C-22D935A086F4}</Project>
+      <Name>BnsApis</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.DynamoDBv2.3.3.6\analyzers\dotnet\cs\AWSSDK.DynamoDBv2.CodeAnalysis.dll" />

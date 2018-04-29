@@ -1,15 +1,17 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.Sheets.v4;
+using Google.Apis.Util.Store;
 using Microsoft.Extensions.DependencyInjection;
 using ShagBot.Extensions;
-using ShagBot.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
+using System.IO;
 using System.Reflection;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ShagBot
@@ -18,16 +20,23 @@ namespace ShagBot
     {
         private DiscordSocketClient _client;
         private CommandService _cmdService;
+        private IServiceProvider _services;
 
         public static readonly char CmdPrefix = '!';
         public static readonly string IgnoreErrorOutput = "<Do Not Show Error Output>";
         public static IEnumerable<CommandInfo> Commands { get; private set; }
 
+        private static string[] _sheetScope = { SheetsService.Scope.Spreadsheets };
+        private static string _sheetAppName = "ShajeshBot";
+
         public CommandHandler(DiscordSocketClient client)
         {
             _client = client;
+
+            BuildServices();
+
             _cmdService = new CommandService();
-            _cmdService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
+            _cmdService.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
             Commands = _cmdService.Commands;
 
             _client.MessageReceived += HandleCommandAsync;
@@ -53,7 +62,7 @@ namespace ShagBot
 
             if (msg.HasCharPrefix(CmdPrefix, ref argPos))
             {
-                var result = await _cmdService.ExecuteAsync(context, argPos, null);
+                var result = await _cmdService.ExecuteAsync(context, argPos, _services);
 
                 var noError = result.IsSuccess
                             || result.Error == CommandError.UnknownCommand
@@ -77,6 +86,34 @@ namespace ShagBot
                     }
                 }
             }
+        }
+
+        private void BuildServices()
+        {
+            UserCredential credentials;
+
+            using (var clSecret = new FileStream("client_secret.json", FileMode.Open, FileAccess.Read))
+            {
+                var credPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                credPath = Path.Combine(credPath, ".google_sheets_creds/shajeshbot_creds.json");
+
+                credentials = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.Load(clSecret).Secrets,
+                    _sheetScope,
+                    "user",
+                    CancellationToken.None,
+                    new FileDataStore(credPath, true)).Result;
+            }
+
+            var sheetService = new SheetsService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credentials,
+                ApplicationName = _sheetAppName,
+            });
+
+            _services = new ServiceCollection()
+                            .AddSingleton(sheetService)
+                            .BuildServiceProvider();
         }
     }
 }

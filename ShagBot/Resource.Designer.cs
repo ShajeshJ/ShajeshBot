@@ -133,6 +133,24 @@ namespace ShagBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1) This command is restricted for use in the bns channel only.\r\n\r\n2) The command lists the lowest 10 marketplace listings for a specified item.\r\n\r\n3) Partial item names, or abbreviations can be used to search for an item, and the first matched item is returned.\r\n\r\n4) If a searched abbreviation does not return the expected results, it may not be defined; ping the admin to have the abbreviation defined..
+        /// </summary>
+        internal static string BnsMpRemarks {
+            get {
+                return ResourceManager.GetString("BnsMpRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use this command to get the specified item&apos;s marketplace listings in Blade &amp; Soul.\r\n**Usage Examples:**\r\n!mp pts\r\n!mp elysian\r\n!bns mp Moonstone.
+        /// </summary>
+        internal static string BnsMpSummary {
+            get {
+                return ResourceManager.GetString("BnsMpSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The command will fail if a role with the specified name already exists..
         /// </summary>
         internal static string CreateGroupRemarks {

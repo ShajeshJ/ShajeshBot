@@ -1,8 +1,11 @@
 ﻿using BnsApis;
+using BnsApis.SheetApis;
 using Discord;
 using Discord.Commands;
+using Google.Apis.Sheets.v4;
 using ShagBot.Attributes;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,6 +38,13 @@ namespace ShagBot.Modules
             {
                 return Context.Guild.Emotes.FirstOrDefault(e => e.Name == "bns_silver").ToString() ?? "silver";
             }
+        }
+
+        SheetsService _ssService;
+
+        public BnsModule(SheetsService sheetService)
+        {
+            _ssService = sheetService;
         }
 
         [Command("bns dailies")]
@@ -92,8 +102,12 @@ namespace ShagBot.Modules
             var dailies = await questApi.GetDailyChallenge(parsedDay);
 
             var embed = new EmbedBuilder();
-
-            embed.Title = $"{parsedDay.ToString()}'s Dailies";
+            
+            embed.Author = new EmbedAuthorBuilder()
+            {
+                Name = $"{parsedDay.ToString()}'s Dailies",
+                IconUrl = ConfigurationManager.AppSettings["DAILY_QUEST_ICON"]
+            };
 
             foreach (var daily in dailies)
             {
@@ -112,15 +126,63 @@ namespace ShagBot.Modules
                 embed.AddField(field);
             }
 
+            embed.Footer = new EmbedFooterBuilder()
+            {
+                Text = "Data retrieved from the Unofficial BnS API. Documentation: https://slate.silveress.ie/docs_bns"
+            };
+
             await ReplyAsync("", embed: embed.Build());
         }
 
         [Command("bns mp")]
         [Alias("mp")]
         [RequireBotContext(CmdChannelType.BnsChannel)]
-        public async Task GetMarketplaceValue(string item)
+        [CmdSummary(nameof(Resource.BnsMpSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.BnsMpRemarks), typeof(Resource))]
+        public async Task GetMarketplaceValue([Remainder]string item)
         {
+            //Search for the item through personal sheets to find corresponding id
+            var itemSearchApi = new ItemSearchApi(_ssService);
+            var id = await itemSearchApi.GetItemId(item);
 
+            //Use item id to retrieve item details (in particular, image for the item)
+            var itemApi = new ItemApi();
+            var itemDetails = await itemApi.GetItemDetails(id);
+
+            //Use item id to retrieve current marketplace value of the item
+            var mpApi = new MarketplaceApi();
+            var listings = await mpApi.GetMarketplaceListing(id);
+
+            var embed = new EmbedBuilder();
+
+            embed.ThumbnailUrl = itemDetails.ImgUrl;
+            embed.Title = itemDetails.Name;
+
+            var maxListing = Math.Min(10, listings.Listings.Length);
+
+            var formattedListings = "";
+
+            for (int i = 0; i < maxListing; i++)
+            {
+                var listing = listings.Listings[i];
+
+                formattedListings += $"{listing.PricePerItem_Gold} {GoldIcon} {listing.PricePerItem_Silver} {SilverIcon} x {listing.Count}";
+                formattedListings += $"   |   {listing.Price/10000.0} g Total\r\n";
+            }
+
+            embed.AddField(new EmbedFieldBuilder()
+            {
+                Name = $"Lowest marketplace listings for {itemDetails.Name}.",
+                Value = formattedListings
+            });
+
+            embed.Footer = new EmbedFooterBuilder()
+            {
+                Text = "Data retrieved from the Unofficial BnS API. Documentation: https://slate.silveress.ie/docs_bns"
+            };
+            embed.Timestamp = new DateTimeOffset(listings.DateRetrieved);
+
+            await ReplyAsync("", embed: embed.Build());
         }
     }
 }

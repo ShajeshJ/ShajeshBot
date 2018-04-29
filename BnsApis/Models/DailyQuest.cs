@@ -24,7 +24,7 @@ namespace BnsApis.Models
         {
             get
             {
-                return (Gold / 10000) % 100;
+                return Gold / 10000;
             }
         }
         public int SilverPortion

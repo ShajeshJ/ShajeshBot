@@ -16,7 +16,7 @@ namespace BnsApis
 
         public QuestApi()
         {
-            _questUrl = ConfigurationManager.AppSettings["BASE_URL"] + ConfigurationManager.AppSettings["QUEST_RESOURCE"];
+            _questUrl = ConfigurationManager.AppSettings["BNS_BASE_URL"] + ConfigurationManager.AppSettings["QUEST_RESOURCE"];
         }
 
         public async Task<List<DailyQuest>> GetDailyChallenge(DayOfWeek day)

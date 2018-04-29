@@ -141,6 +141,12 @@
   <data name="BnsDailiesSummary" xml:space="preserve">
     <value>Use this command to get a list of the daily challenge quests for today or a specified day in Blade &amp; Soul.\r\n**Usage Examples:**\r\n!dailies\r\n!dailies sun\r\n!dailies Monday\r\n!dailies sat true</value>
   </data>
+  <data name="BnsMpRemarks" xml:space="preserve">
+    <value>1) This command is restricted for use in the bns channel only.\r\n\r\n2) The command lists the lowest 10 marketplace listings for a specified item.\r\n\r\n3) Partial item names, or abbreviations can be used to search for an item, and the first matched item is returned.\r\n\r\n4) If a searched abbreviation does not return the expected results, it may not be defined; ping the admin to have the abbreviation defined.</value>
+  </data>
+  <data name="BnsMpSummary" xml:space="preserve">
+    <value>Use this command to get the specified item's marketplace listings in Blade &amp; Soul.\r\n**Usage Examples:**\r\n!mp pts\r\n!mp elysian\r\n!bns mp Moonstone</value>
+  </data>
   <data name="CreateGroupRemarks" xml:space="preserve">
     <value>The command will fail if a role with the specified name already exists.</value>
   </data>

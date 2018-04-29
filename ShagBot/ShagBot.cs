@@ -44,7 +44,7 @@ namespace ShagBot
                     var embed = new EmbedBuilder();
                     embed.WithTitle("Patch Notes");
                     embed.WithDescription(_patchnotes);
-                    var msg = await botChannel.SendMessageAsync("@here", embed: embed.Build());
+                    var msg = await botChannel.SendMessageAsync("", embed: embed.Build());
                     await msg.PinAsync();
 
                     _patchnotes = null;

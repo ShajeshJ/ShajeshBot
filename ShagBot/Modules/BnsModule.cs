@@ -145,9 +145,21 @@ namespace ShagBot.Modules
             var itemSearchApi = new ItemSearchApi(_ssService);
             var id = await itemSearchApi.GetItemId(item);
 
+            if (id == 0)
+            {
+                await ReplyAsync($"Could not find item with search key '{item}'");
+                return;
+            }
+
             //Use item id to retrieve item details (in particular, image for the item)
             var itemApi = new ItemApi();
             var itemDetails = await itemApi.GetItemDetails(id);
+
+            if (itemDetails == null)
+            {
+                await ReplyAsync($"Could not find item with search key '{item}'");
+                return;
+            }
 
             //Use item id to retrieve current marketplace value of the item
             var mpApi = new MarketplaceApi();
@@ -158,7 +170,7 @@ namespace ShagBot.Modules
             embed.ThumbnailUrl = itemDetails.ImgUrl;
             embed.Title = itemDetails.Name;
 
-            var maxListing = Math.Min(10, listings.Listings.Length);
+            var maxListing = Math.Min(10, listings?.Listings.Length ?? 0);
 
             var formattedListings = "";
 
@@ -170,6 +182,8 @@ namespace ShagBot.Modules
                 formattedListings += $"   |   {listing.Price/10000.0} g Total\r\n";
             }
 
+            formattedListings = string.IsNullOrEmpty(formattedListings) ? "<No listings available>" : formattedListings;
+
             embed.AddField(new EmbedFieldBuilder()
             {
                 Name = $"Lowest marketplace listings for {itemDetails.Name}.",
@@ -180,7 +194,11 @@ namespace ShagBot.Modules
             {
                 Text = "Data retrieved from the Unofficial BnS API. Documentation: https://slate.silveress.ie/docs_bns"
             };
-            embed.Timestamp = new DateTimeOffset(listings.DateRetrieved);
+            
+            if (listings != null)
+            {
+                embed.Timestamp = new DateTimeOffset(listings.DateRetrieved);
+            }
 
             await ReplyAsync("", embed: embed.Build());
         }

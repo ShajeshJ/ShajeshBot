@@ -17,7 +17,7 @@ namespace BnsApis.SheetApis
         private string _spreadsheetId;
 
         private readonly string InputRange = "API Endpoint!B2";
-        private readonly string OutputRange = "API Endpoint!E2";
+        private readonly string OutputRange = "API Endpoint!F2";
 
         SheetsService _sheetService;
 
@@ -46,7 +46,7 @@ namespace BnsApis.SheetApis
             var outputRequest = _sheetService.Spreadsheets.Values.Get(_spreadsheetId, OutputRange);
             var outputResponse = await outputRequest.ExecuteAsync();
 
-            Int32.TryParse(outputResponse.Values.FirstOrDefault()?.FirstOrDefault()?.ToString(), out var id);
+            Int32.TryParse(outputResponse.Values?.FirstOrDefault()?.FirstOrDefault()?.ToString(), out var id);
 
             return id;
         }

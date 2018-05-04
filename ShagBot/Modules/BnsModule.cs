@@ -116,7 +116,7 @@ namespace ShagBot.Modules
 
                 if (detailed)
                 {
-                    field.Value = $"{daily.Location}\r\n{daily.GoldPortion} {GoldIcon} {daily.SilverPortion} {SilverIcon}\r\n{daily.XP} XP";
+                    field.Value = $"{daily.Location}\r\n{daily.GoldReward.GoldPart} {GoldIcon} {daily.GoldReward.SilverPart} {SilverIcon}\r\n{daily.XP} XP";
                 }
                 else
                 {
@@ -178,8 +178,8 @@ namespace ShagBot.Modules
             {
                 var listing = listings.Listings[i];
 
-                formattedListings += $"{listing.PricePerItem_Gold} {GoldIcon} {listing.PricePerItem_Silver} {SilverIcon} x {listing.Count}";
-                formattedListings += $"   |   {listing.Price/10000.0} g Total\r\n";
+                formattedListings += $"{listing.PricePerItem.GoldPart} {GoldIcon} {listing.PricePerItem.SilverPart} {SilverIcon} x {listing.Count}";
+                formattedListings += $"   |   {listing.Price.Total/10000.0} g Total\r\n";
             }
 
             formattedListings = string.IsNullOrEmpty(formattedListings) ? "<No listings available>" : formattedListings;

@@ -31,7 +31,7 @@ namespace BnsApis
             var jsonBody = await response.Content.ReadAsStringAsync();
 
             var body = JsonConvert.DeserializeObject<DailyQuest[]>(jsonBody);
-            var dailies = body.OrderByDescending(d => d.Gold).ToList();
+            var dailies = body.OrderByDescending(d => d.GoldReward).ToList();
 
             return dailies;
         }

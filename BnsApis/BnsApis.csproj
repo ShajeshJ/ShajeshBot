@@ -64,9 +64,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\GoldJsonConverter.cs" />
+    <Compile Include="CraftingApi.cs" />
     <Compile Include="ItemApi.cs" />
     <Compile Include="MarketplaceApi.cs" />
+    <Compile Include="Models\CraftingDetails.cs" />
     <Compile Include="Models\DailyQuest.cs" />
+    <Compile Include="Models\Gold.cs" />
     <Compile Include="Models\ItemDetails.cs" />
     <Compile Include="Models\MarketplaceListing.cs" />
     <Compile Include="QuestApi.cs" />

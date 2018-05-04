@@ -115,6 +115,24 @@ namespace ShagBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1) This command is restricted for use in the bns channel only.\r\n\r\n2) The craft amount specified must exactly match the crafting output amount of one of the craft durations.\r\n\r\n3) Partial item names, or abbreviations can be used to search for an item, and the first matched item is returned.\r\n\r\n4) If a searched abbreviation does not return the expected results, it may not be defined; ping the admin to have the abbreviation defined..
+        /// </summary>
+        internal static string BnsCrRemarks {
+            get {
+                return ResourceManager.GetString("BnsCrRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use this command to see the net earnings of a craftable item in Blade &amp; Soul.\r\n**Usage Examples:**\r\n!cr 1 pts\r\n!cr 9 emp\r\n!bns cr Transformation Stone.
+        /// </summary>
+        internal static string BnsCrSummary {
+            get {
+                return ResourceManager.GetString("BnsCrSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1) This command is restricted for use in the bns channel only.\r\n\r\n2) To request today&apos;s dailies, do not specify any input parameters.\r\n\r\n3) Long and short forms for days the of week can be used in the [day] parameter, and can have any casing.\r\n\r\n4) To get extra details for each daily, set the [detailed] parameter to &quot;true&quot;.\r\n\r\n5) Quests are sorted in descending order by gold rewards..
         /// </summary>
         internal static string BnsDailiesRemarks {

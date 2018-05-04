@@ -208,6 +208,8 @@ namespace ShagBot.Modules
         [Command("bns cr")]
         [Alias("cr", "crafting")]
         [RequireBotContext(CmdChannelType.BnsChannel)]
+        [CmdSummary(nameof(Resource.BnsCrSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.BnsCrRemarks), typeof(Resource))]
         public async Task GetCraftingCost(int amount, [Remainder]string item)
         {
             //Search for the item through personal sheets to find corresponding id
@@ -249,6 +251,8 @@ namespace ShagBot.Modules
                 }
                 return;
             }
+
+            var altRecipes = craftRecipes.Where(r => r.Quantity != chosenRecipe.Quantity);
 
             var mpApi = new MarketplaceApi();
             var tasks = new List<Task>();
@@ -370,7 +374,16 @@ namespace ShagBot.Modules
                 embed.Title += " (chance to fail)";
             }
 
-            embed.Description = $"Crafting Source: {chosenRecipe.CraftingSource}\r\nNet Earnings: {netCost.GoldPart} {GoldIcon} {netCost.SilverPart} {SilverIcon}";
+            embed.Description = $"Net Earnings: {netCost.GoldPart} {GoldIcon} {netCost.SilverPart} {SilverIcon}";
+
+            var altCraftAmtStr = altRecipes.Aggregate("", (accum, cur) => accum + cur.Quantity + ", ", accum => accum.TrimEnd(',', ' '));
+
+            var craftSpecsStr = $"Source: {chosenRecipe.CraftingSource}";
+            craftSpecsStr += chosenRecipe.CraftDuration > 0 ? $"\r\nDuration: {chosenRecipe.CraftDuration} hrs" : "";
+            craftSpecsStr += string.IsNullOrEmpty(altCraftAmtStr) ? "" 
+                                : $"\r\nAmount: {chosenRecipe.Quantity} (alternate craft amounts: {altCraftAmtStr})";
+
+            embed.AddField("Crafting Information", craftSpecsStr, false);
 
             embed.AddField("Market Price", $"{outputPrice.GoldPart} {GoldIcon} {outputPrice.SilverPart} {SilverIcon}", true);
             embed.AddField("Crafting Cost", $"{craftCost.GoldPart} {GoldIcon} {craftCost.SilverPart} {SilverIcon}", true);

@@ -12,7 +12,7 @@ namespace BnsApis.Converters
     {
         public override Gold ReadJson(JsonReader reader, Type objectType, Gold existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            int amt = (int)reader.Value;
+            int amt = Int32.Parse(reader.Value.ToString());
             return new Gold(amt);
         }
 

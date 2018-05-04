@@ -1,10 +1,12 @@
 ﻿using BnsApis;
+using BnsApis.Models;
 using BnsApis.SheetApis;
 using Discord;
 using Discord.Commands;
 using Google.Apis.Sheets.v4;
 using ShagBot.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +50,7 @@ namespace ShagBot.Modules
         }
 
         [Command("bns dailies")]
-        [Alias("dailies")]
+        [Alias("dailies", "daily")]
         [RequireBotContext(CmdChannelType.BnsChannel)]
         [CmdSummary(nameof(Resource.BnsDailiesSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.BnsDailiesRemarks), typeof(Resource))]
@@ -135,7 +137,7 @@ namespace ShagBot.Modules
         }
 
         [Command("bns mp")]
-        [Alias("mp")]
+        [Alias("mp", "marketplace")]
         [RequireBotContext(CmdChannelType.BnsChannel)]
         [CmdSummary(nameof(Resource.BnsMpSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.BnsMpRemarks), typeof(Resource))]
@@ -199,6 +201,174 @@ namespace ShagBot.Modules
             {
                 embed.Timestamp = new DateTimeOffset(listings.DateRetrieved);
             }
+
+            await ReplyAsync("", embed: embed.Build());
+        }
+
+        [Command("bns cr")]
+        [Alias("cr", "crafting")]
+        [RequireBotContext(CmdChannelType.BnsChannel)]
+        public async Task GetCraftingCost(int amount, [Remainder]string item)
+        {
+            //Search for the item through personal sheets to find corresponding id
+            var itemSearchApi = new ItemSearchApi(_ssService);
+            var id = await itemSearchApi.GetItemId(item);
+
+            if (id == 0)
+            {
+                await ReplyAsync($"Could not find item with search key '{item}'");
+                return;
+            }
+
+            //Use item id to retrieve item details (in particular, image for the item)
+            var itemApi = new ItemApi();
+            var itemDetails = await itemApi.GetItemDetails(id);
+
+            if (itemDetails == null)
+            {
+                await ReplyAsync($"Could not find item with search key '{item}'");
+                return;
+            }
+
+            //Use item id to retrieve current marketplace value of the item
+            var crApi = new CraftingApi();
+            var craftRecipes = await crApi.GetCraftingCost(itemDetails.Name);
+
+            var chosenRecipe = craftRecipes.Where(r => r.Quantity == amount).FirstOrDefault();
+
+            if (chosenRecipe == null)
+            {
+                var amountList = craftRecipes.Aggregate("", (accum, cur) => accum + cur.Quantity + ", ", accum => accum.TrimEnd(',', ' '));
+                await ReplyAsync($"Must choose one of the following craft amounts for '{itemDetails.Name}': {amountList}");
+                return;
+            }
+
+            var mpApi = new MarketplaceApi();
+            var tasks = new List<Task>();
+
+            var mainItemListing = await mpApi.GetMarketplaceListing(itemDetails.Id);
+
+            if ((mainItemListing?.Listings.Length ?? 0) == 0)
+            {
+                await ReplyAsync($"No maketplace listings available for '{itemDetails.Name}'");
+                return;
+            }
+
+            var outputPrice = mainItemListing.Listings.First().PricePerItem * chosenRecipe.Quantity;
+
+            if (chosenRecipe.Ingredients != null)
+            {
+                //Currently the drive only supports searching for items in a serial manner
+                //Can avoid this slow linear search if/when the unofficial api returns ids along with item names
+                for (int i = 0; i < chosenRecipe.Ingredients.Length; i++)
+                {
+                    var idx = i;
+                    chosenRecipe.Ingredients[idx].Id = await itemSearchApi.GetItemId(chosenRecipe.Ingredients[idx].Name);
+
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        chosenRecipe.Ingredients[idx].Cost = new Gold(0);
+
+                        //Some items may not be sellable items, or may not be listed on the marketplace; we ignore these
+                        if (chosenRecipe.Ingredients[idx].Id != 0)
+                        {
+                            var listing = await mpApi.GetMarketplaceListing(chosenRecipe.Ingredients[idx].Id);
+
+                            if ((listing?.Listings.Length ?? 0) != 0)
+                            {
+                                chosenRecipe.Ingredients[idx].Cost = listing.Listings.First().PricePerItem * chosenRecipe.Ingredients[idx].Quantity;
+                            }
+                        }
+                    }));
+                }
+            }
+
+            if (chosenRecipe.AttemptIngredients != null)
+            {
+                //Currently the drive only supports searching for items in a serial manner
+                //Can avoid this slow linear search if/when the unofficial api returns ids along with item names
+                for (int i = 0; i < chosenRecipe.AttemptIngredients.Length; i++)
+                {
+                    var idx = i;
+                    chosenRecipe.AttemptIngredients[idx].Id = await itemSearchApi.GetItemId(chosenRecipe.AttemptIngredients[idx].Name);
+
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        chosenRecipe.AttemptIngredients[idx].Cost = new Gold(0);
+
+                        //Some items may not be sellable items, or may not be listed on the marketplace; we ignore these
+                        if (chosenRecipe.AttemptIngredients[idx].Id != 0)
+                        {
+                            var listing = await mpApi.GetMarketplaceListing(chosenRecipe.AttemptIngredients[idx].Id);
+
+                            if ((listing?.Listings.Length ?? 0) != 0)
+                            {
+                                chosenRecipe.AttemptIngredients[idx].Cost = listing.Listings.First().PricePerItem 
+                                                                            * chosenRecipe.AttemptIngredients[idx].Quantity;
+                            }
+                        }
+                    }));
+                }
+            }
+
+            await Task.WhenAll(tasks);
+
+            var craftCost = chosenRecipe.Cost;
+
+            var individualCostStr = $"{chosenRecipe.Cost.GoldPart} {GoldIcon} {chosenRecipe.Cost.SilverPart} {SilverIcon} - Crafting Price\r\n";
+
+            if (chosenRecipe.Ingredients != null)
+            {
+                foreach (var ing in chosenRecipe.Ingredients)
+                {
+                    craftCost += ing.Cost;
+
+                    if (ing.Cost == 0)
+                    {
+                        individualCostStr += $"No marketplace value available - {ing.Name} x {ing.Quantity}\r\n";
+                    }
+                    else
+                    {
+                        individualCostStr += $"{ing.Cost.GoldPart} {GoldIcon} {ing.Cost.SilverPart} {SilverIcon} - {ing.Name} x {ing.Quantity}\r\n";
+                    }
+                }
+            }
+
+            if (chosenRecipe.AttemptIngredients != null)
+            {
+                foreach (var atmpt in chosenRecipe.AttemptIngredients)
+                {
+                    craftCost += atmpt.Cost;
+
+                    if (atmpt.Cost == 0)
+                    {
+                        individualCostStr += $"No marketplace value available - {atmpt.Name} x {atmpt.Quantity}\r\n";
+                    }
+                    else
+                    {
+                        individualCostStr += $"{atmpt.Cost.GoldPart} {GoldIcon} {atmpt.Cost.SilverPart} {SilverIcon} - {atmpt.Name} x {atmpt.Quantity}\r\n";
+                    }
+                }
+            }
+
+            var netCost = outputPrice - craftCost;
+
+            var embed = new EmbedBuilder();
+
+            embed.ThumbnailUrl = itemDetails.ImgUrl;
+            embed.Title = itemDetails.Name;
+
+            embed.Description = $"Net Earnings: {netCost.GoldPart} {GoldIcon} {netCost.SilverPart} {SilverIcon}";
+
+            embed.AddField("Market Price", $"{outputPrice.GoldPart} {GoldIcon} {outputPrice.SilverPart} {SilverIcon}", true);
+            embed.AddField("Crafting Cost", $"{craftCost.GoldPart} {GoldIcon} {craftCost.SilverPart} {SilverIcon}", true);
+
+            embed.AddField("Individual Item Costs", individualCostStr, false);
+
+            embed.Footer = new EmbedFooterBuilder()
+            {
+                Text = "Data retrieved from the Unofficial BnS API. Documentation: https://slate.silveress.ie/docs_bns"
+            };
 
             await ReplyAsync("", embed: embed.Build());
         }

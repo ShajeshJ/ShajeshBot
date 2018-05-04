@@ -38,10 +38,16 @@ namespace BnsApis.Models
 
     public class CraftingIngredient
     {
+        //Currently not returned by unofficial API, so we will have to populate this ourselves
+        public int Id { get; set; }
+
         [JsonProperty("name")]
         public string Name { get; set; }
         
         [JsonProperty("quantity")]
         public int Quantity { get; set; }
+
+        //Should be filled in by MP API (is the total cost of the whole quantity)
+        public Gold Cost{ get; set; }
     }
 }

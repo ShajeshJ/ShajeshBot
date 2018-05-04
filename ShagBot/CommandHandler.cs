@@ -62,6 +62,7 @@ namespace ShagBot
 
             if (msg.HasCharPrefix(CmdPrefix, ref argPos))
             {
+                var typingState = context.Channel.EnterTypingState();
                 var result = await _cmdService.ExecuteAsync(context, argPos, _services);
 
                 var noError = result.IsSuccess
@@ -85,6 +86,7 @@ namespace ShagBot
                         await context.Channel.SendMessageAsync(result.ErrorReason);
                     }
                 }
+                typingState.Dispose();
             }
         }
 

@@ -32,6 +32,9 @@ namespace BnsApis.Models
         [JsonProperty("ingredients")]
         public CraftingIngredient[] Ingredients { get; set; }
 
+        [JsonProperty("successChance")]
+        public double SuccessRate { get; set; }
+
         [JsonProperty("attemptCost")]
         public CraftingIngredient[] AttemptIngredients { get; set; }
     }

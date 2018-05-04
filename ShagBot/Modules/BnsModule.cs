@@ -238,8 +238,15 @@ namespace ShagBot.Modules
 
             if (chosenRecipe == null)
             {
-                var amountList = craftRecipes.Aggregate("", (accum, cur) => accum + cur.Quantity + ", ", accum => accum.TrimEnd(',', ' '));
-                await ReplyAsync($"Must choose one of the following craft amounts for '{itemDetails.Name}': {amountList}");
+                if (craftRecipes.Length == 0)
+                {
+                    await ReplyAsync($"No crafting recipes available for '{itemDetails.Name}'");
+                }
+                else
+                {
+                    var amountList = craftRecipes.Aggregate("", (accum, cur) => accum + cur.Quantity + ", ", accum => accum.TrimEnd(',', ' '));
+                    await ReplyAsync($"Must choose one of the following craft amounts for '{itemDetails.Name}': {amountList}");
+                }
                 return;
             }
 
@@ -358,7 +365,12 @@ namespace ShagBot.Modules
             embed.ThumbnailUrl = itemDetails.ImgUrl;
             embed.Title = itemDetails.Name;
 
-            embed.Description = $"Net Earnings: {netCost.GoldPart} {GoldIcon} {netCost.SilverPart} {SilverIcon}";
+            if (chosenRecipe.SuccessRate > 0.0 && chosenRecipe.SuccessRate < 1.0)
+            {
+                embed.Title += " (chance to fail)";
+            }
+
+            embed.Description = $"Crafting Source: {chosenRecipe.CraftingSource}\r\nNet Earnings: {netCost.GoldPart} {GoldIcon} {netCost.SilverPart} {SilverIcon}";
 
             embed.AddField("Market Price", $"{outputPrice.GoldPart} {GoldIcon} {outputPrice.SilverPart} {SilverIcon}", true);
             embed.AddField("Crafting Cost", $"{craftCost.GoldPart} {GoldIcon} {craftCost.SilverPart} {SilverIcon}", true);

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BnsApis.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,12 +14,14 @@ namespace BnsApis
     {
         private string _craftUrl;
 
+        private string[] _craftSourceBlackList = { "process", "unsealing", "upgrade" };
+
         public CraftingApi()
         {
             _craftUrl = ConfigurationManager.AppSettings["BNS_BASE_URL"] + ConfigurationManager.AppSettings["CR_RESOURCE"];
         }
 
-        public async Task GetCraftingCost(int id)
+        public async Task<CraftingDetails[]> GetCraftingCost(int id)
         {
             var url = _craftUrl + $"?id={id}&active=TRUE";
 
@@ -29,10 +32,10 @@ namespace BnsApis
 
             var jsonBody = await response.Content.ReadAsStringAsync();
 
-            //var body = JsonConvert.DeserializeObject<MarketplaceListing[]>(jsonBody);
-            //var listing = body.FirstOrDefault();
+            var body = JsonConvert.DeserializeObject<CraftingDetails[]>(jsonBody);
+            var craftList = body.Where(x => !_craftSourceBlackList.Contains(x.CraftingSource)).ToArray();
 
-            //return listing;
+            return craftList;
         }
     }
 }

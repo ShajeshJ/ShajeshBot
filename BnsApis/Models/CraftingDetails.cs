@@ -25,5 +25,23 @@ namespace BnsApis.Models
         [JsonProperty("cost")]
         [JsonConverter(typeof(GoldJsonConverter))]
         public Gold Cost { get; set; }
+
+        [JsonProperty("hours")]
+        public int CraftDuration { get; set; }
+
+        [JsonProperty("ingredients")]
+        public CraftingIngredient[] Ingredients { get; set; }
+
+        [JsonProperty("attemptCost")]
+        public CraftingIngredient[] AttemptIngredients { get; set; }
+    }
+
+    public class CraftingIngredient
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        
+        [JsonProperty("quantity")]
+        public int Quantity { get; set; }
     }
 }

@@ -21,9 +21,13 @@ namespace ShajeshBot.Modules
             _sudokuMsg = null;
         }
 
+        #region Sudoku Commands
+
         [Command("sudoku new")]
+        [Alias("s new")]
         [RequireBotContext(CmdChannelType.BotChannel)]
-        [CmdSummary(nameof(Resource.SudokuSummary), typeof(Resource))]
+        [CmdSummary(nameof(Resource.SudokuNewSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.SudokuNewRemarks), typeof(Resource))]
         public async Task StartSudokuGame()
         {
             if (_sudokuMsg != null)
@@ -39,7 +43,10 @@ namespace ShajeshBot.Modules
         }
 
         [Command("sudoku show")]
+        [Alias("s show")]
         [RequireBotContext(CmdChannelType.BotChannel)]
+        [CmdSummary(nameof(Resource.SudokuShowSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.SudokuShowRemarks), typeof(Resource))]
         public async Task ShowSudokuPuzzle()
         {
             if (_sudokuMsg == null)
@@ -53,7 +60,10 @@ namespace ShajeshBot.Modules
         }
 
         [Command("sudoku end")]
+        [Alias("s end")]
         [RequireBotContext(CmdChannelType.BotChannel)]
+        [CmdSummary(nameof(Resource.SudokuEndSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.SudokuEndRemarks), typeof(Resource))]
         public async Task EndSudokuGame()
         {
             if (_sudokuMsg == null)
@@ -68,7 +78,10 @@ namespace ShajeshBot.Modules
         }
 
         [Command("sudoku reset")]
+        [Alias("s reset")]
         [RequireBotContext(CmdChannelType.BotChannel)]
+        [CmdSummary(nameof(Resource.SudokuResetSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.SudokuResetRemarks), typeof(Resource))]
         public async Task ResetSudokuGame()
         {
             if (_sudokuMsg == null)
@@ -83,7 +96,10 @@ namespace ShajeshBot.Modules
         }
 
         [Command("sudoku set")]
+        [Alias("s set")]
         [RequireBotContext(CmdChannelType.BotChannel)]
+        [CmdSummary(nameof(Resource.SudokuSetSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.SudokuSetRemarks), typeof(Resource))]
         public async Task SetSudokuPiece(string coordinates, int value)
         {
             if (_sudokuMsg == null)
@@ -128,7 +144,10 @@ namespace ShajeshBot.Modules
         }
 
         [Command("sudoku del")]
+        [Alias("s del")]
         [RequireBotContext(CmdChannelType.BotChannel)]
+        [CmdSummary(nameof(Resource.SudokuDelSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.SudokuDelRemarks), typeof(Resource))]
         public async Task DeleteSudokuPiece(string coordinates)
         {
             if (_sudokuMsg == null)
@@ -163,25 +182,6 @@ namespace ShajeshBot.Modules
             {
                 await SendSudokuError(result);
             }
-        }
-        
-        [Command("dice")]
-        [Alias("roll")]
-        [RequireBotContext(CmdChannelType.BotChannel)]
-        [CmdSummary(nameof(Resource.DiceSummary), typeof(Resource))]
-        [CmdRemarks(nameof(Resource.DiceRemarks), typeof(Resource))]
-        public async Task GenRandomNumber(int min, int max)
-        {
-            if (min > max)
-            {
-                await ReplyAsync("Min value must be less than max value.");
-                return;
-            }
-
-            var rand = new Random();
-            var value = rand.Next(min, max + 1);
-
-            await ReplyAsync($"Rolled: {value}");
         }
 
         private async Task SendSudokuImg()
@@ -246,6 +246,27 @@ namespace ShajeshBot.Modules
             {
                 await ReplyAsync("The specified location cannot be modified as it is part of the original puzzle.");
             }
+        }
+
+        #endregion
+
+        [Command("dice")]
+        [Alias("roll")]
+        [RequireBotContext(CmdChannelType.BotChannel)]
+        [CmdSummary(nameof(Resource.DiceSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.DiceRemarks), typeof(Resource))]
+        public async Task GenRandomNumber(int min, int max)
+        {
+            if (min > max)
+            {
+                await ReplyAsync("Min value must be less than max value.");
+                return;
+            }
+
+            var rand = new Random();
+            var value = rand.Next(min, max + 1);
+
+            await ReplyAsync($"Rolled: {value}");
         }
     }
 }

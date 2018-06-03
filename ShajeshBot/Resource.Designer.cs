@@ -439,11 +439,110 @@ namespace ShajeshBot {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The command will randomly generate a sudoku puzzle image.
+        ///   Looks up a localized string similar to This command can only be used in the bot channel, and will fail if:\r\n\r\n1) There is no currently active game of sudoku.\r\n\r\n2) The parameters are incorrectly formatted or have incorrect values.\r\n\r\n3) The specified location is not occupied by a value.\r\n\r\n4) The specified location was filled in by the original puzzle, and cannot be changed..
         /// </summary>
-        internal static string SudokuSummary {
+        internal static string SudokuDelRemarks {
             get {
-                return ResourceManager.GetString("SudokuSummary", resourceCulture);
+                return ResourceManager.GetString("SudokuDelRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will delete the value at the specified location on the sudoku board.\r\n**Usage Examples:**\r\n!sudoku del B7\r\n!sudoku del a3.
+        /// </summary>
+        internal static string SudokuDelSummary {
+            get {
+                return ResourceManager.GetString("SudokuDelSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used in the bot channel, and can only be used if there is a currently active sudoku game..
+        /// </summary>
+        internal static string SudokuEndRemarks {
+            get {
+                return ResourceManager.GetString("SudokuEndRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will end the currently active sudoku game..
+        /// </summary>
+        internal static string SudokuEndSummary {
+            get {
+                return ResourceManager.GetString("SudokuEndSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used in the bot channel, and can only start a new game if there is no currently active game..
+        /// </summary>
+        internal static string SudokuNewRemarks {
+            get {
+                return ResourceManager.GetString("SudokuNewRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will generate a new sudoku puzzle and start a new sudoku game..
+        /// </summary>
+        internal static string SudokuNewSummary {
+            get {
+                return ResourceManager.GetString("SudokuNewSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used in the bot channel, and can only be used if there is a currently active sudoku game..
+        /// </summary>
+        internal static string SudokuResetRemarks {
+            get {
+                return ResourceManager.GetString("SudokuResetRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will reset the sudoku board back to its original unsolved state..
+        /// </summary>
+        internal static string SudokuResetSummary {
+            get {
+                return ResourceManager.GetString("SudokuResetSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used in the bot channel, and will fail if:\r\n\r\n1) There is no currently active game of sudoku.\r\n\r\n2) The parameters are incorrectly formatted or have incorrect values.\r\n\r\n3) The specified location is already occupied by a value.\r\n\r\n4) The specified location was filled in by the original puzzle, and cannot be changed..
+        /// </summary>
+        internal static string SudokuSetRemarks {
+            get {
+                return ResourceManager.GetString("SudokuSetRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will insert the specified value on to the sudoku board at the specified location.\r\n**Usage Examples:**\r\n!sudoku set B7 2\r\n!sudoku set a3 8.
+        /// </summary>
+        internal static string SudokuSetSummary {
+            get {
+                return ResourceManager.GetString("SudokuSetSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command can only be used in the bot channel, and can only be used if there is a currently active sudoku game..
+        /// </summary>
+        internal static string SudokuShowRemarks {
+            get {
+                return ResourceManager.GetString("SudokuShowRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command wil re-display the sudoku board of a currently active game..
+        /// </summary>
+        internal static string SudokuShowSummary {
+            get {
+                return ResourceManager.GetString("SudokuShowSummary", resourceCulture);
             }
         }
     }

@@ -243,7 +243,40 @@
   <data name="SaySummary" xml:space="preserve">
     <value>Use this command to say the specified message into the bot channel.</value>
   </data>
-  <data name="SudokuSummary" xml:space="preserve">
-    <value>The command will randomly generate a sudoku puzzle image</value>
+  <data name="SudokuDelRemarks" xml:space="preserve">
+    <value>This command can only be used in the bot channel, and will fail if:\r\n\r\n1) There is no currently active game of sudoku.\r\n\r\n2) The parameters are incorrectly formatted or have incorrect values.\r\n\r\n3) The specified location is not occupied by a value.\r\n\r\n4) The specified location was filled in by the original puzzle, and cannot be changed.</value>
+  </data>
+  <data name="SudokuDelSummary" xml:space="preserve">
+    <value>This command will delete the value at the specified location on the sudoku board.\r\n**Usage Examples:**\r\n!sudoku del B7\r\n!sudoku del a3</value>
+  </data>
+  <data name="SudokuEndRemarks" xml:space="preserve">
+    <value>This command can only be used in the bot channel, and can only be used if there is a currently active sudoku game.</value>
+  </data>
+  <data name="SudokuEndSummary" xml:space="preserve">
+    <value>This command will end the currently active sudoku game.</value>
+  </data>
+  <data name="SudokuNewRemarks" xml:space="preserve">
+    <value>This command can only be used in the bot channel, and can only start a new game if there is no currently active game.</value>
+  </data>
+  <data name="SudokuNewSummary" xml:space="preserve">
+    <value>This command will generate a new sudoku puzzle and start a new sudoku game.</value>
+  </data>
+  <data name="SudokuResetRemarks" xml:space="preserve">
+    <value>This command can only be used in the bot channel, and can only be used if there is a currently active sudoku game.</value>
+  </data>
+  <data name="SudokuResetSummary" xml:space="preserve">
+    <value>This command will reset the sudoku board back to its original unsolved state.</value>
+  </data>
+  <data name="SudokuSetRemarks" xml:space="preserve">
+    <value>This command can only be used in the bot channel, and will fail if:\r\n\r\n1) There is no currently active game of sudoku.\r\n\r\n2) The parameters are incorrectly formatted or have incorrect values.\r\n\r\n3) The specified location is already occupied by a value.\r\n\r\n4) The specified location was filled in by the original puzzle, and cannot be changed.</value>
+  </data>
+  <data name="SudokuSetSummary" xml:space="preserve">
+    <value>This command will insert the specified value on to the sudoku board at the specified location.\r\n**Usage Examples:**\r\n!sudoku set B7 2\r\n!sudoku set a3 8</value>
+  </data>
+  <data name="SudokuShowRemarks" xml:space="preserve">
+    <value>This command can only be used in the bot channel, and can only be used if there is a currently active sudoku game.</value>
+  </data>
+  <data name="SudokuShowSummary" xml:space="preserve">
+    <value>This command wil re-display the sudoku board of a currently active game.</value>
   </data>
 </root>

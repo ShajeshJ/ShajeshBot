@@ -10,6 +10,7 @@ namespace ShajeshBot.Utilities
     {
         private Random _rng;
 
+        private static Dictionary<int, IEnumerable<int>> _setLookup;
         private int[] _solvedBoard;
         private int[] _puzzleBoard;
 
@@ -21,8 +22,6 @@ namespace ShajeshBot.Utilities
 
         private static int _tileWidth;
         private static int _tileHeight;
-
-        private static Dictionary<int, IEnumerable<int>> _setLookup;
 
         public int[,] SolvedBoard
         {
@@ -168,14 +167,6 @@ namespace ShajeshBot.Utilities
         }
 
         #endregion
-
-        public void Create()
-        {
-            _solvedBoard = new int[81];
-
-            _solvedBoard = FillBoard(0, _solvedBoard);
-            _puzzleBoard = GeneratePuzzle(_solvedBoard);
-        }
 
         #region Board Generation
 
@@ -390,7 +381,62 @@ namespace ShajeshBot.Utilities
 
         #region User Actions
 
+        public void Create()
+        {
+            _rng = new Random();
+            _solvedBoard = new int[81];
 
+            _solvedBoard = FillBoard(0, _solvedBoard);
+            _puzzleBoard = GeneratePuzzle(_solvedBoard);
+        }
+
+        private SudokuError InsertValue(int row, int col, int value)
+        {
+            if (row < 0 || row > 8 || col < 0 || col > 8)
+                return SudokuError.BadCoords;
+
+            if (value < 1 || value > 9)
+                return SudokuError.BadVal;
+
+            if (PuzzleBoard[row, col] != 0)
+                return SudokuError.Occupied;
+
+            var cell = row * 9 + col;
+
+            foreach(var conflictCell in _setLookup[cell])
+            {
+                if (_puzzleBoard[conflictCell] == _puzzleBoard[cell])
+                    return SudokuError.Conflict;
+            }
+
+            _puzzleBoard[cell] = value;
+
+            return SudokuError.Success;
+        }
+
+        private SudokuError RemoveValue(int row, int col)
+        {
+            if (row < 0 || row > 8 || col < 0 || col > 8)
+                return SudokuError.BadCoords;
+
+            if (PuzzleBoard[row, col] == 0)
+                return SudokuError.Unoccupied;
+
+            var cell = row * 9 + col;
+            _puzzleBoard[cell] = 0;
+
+            return SudokuError.Success;
+        }
+
+        enum SudokuError
+        {
+            Success, 
+            BadCoords, 
+            BadVal, 
+            Conflict, 
+            Occupied, 
+            Unoccupied
+        }
 
         #endregion
     }

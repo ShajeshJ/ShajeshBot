@@ -219,6 +219,9 @@ namespace ShajeshBot.Utilities
             var imgs = new Bitmap[10];
             var drawings = new Graphics[10];
 
+            var letters = new Bitmap[9];
+            var letterDrawings = new Graphics[9];
+
             imgs[0] = new Bitmap((int)textSize.Width, (int)textSize.Height);
             drawings[0] = Graphics.FromImage(imgs[0]);
             drawings[0].Clear(Color.White);
@@ -230,24 +233,35 @@ namespace ShajeshBot.Utilities
                 imgs[i] = new Bitmap((int)textSize.Width, (int)textSize.Height);
                 drawings[i] = Graphics.FromImage(imgs[i]);
                 drawings[i].Clear(Color.White);
-                drawings[i].DrawString((i + 1).ToString(), font, textBrush, 0, 0);
+                drawings[i].DrawString(i.ToString(), font, textBrush, 0, 0);
                 drawings[i].Save();
                 drawings[i].Dispose();
+
+                letters[i - 1] = new Bitmap((int)textSize.Width, (int)textSize.Height);
+                letterDrawings[i - 1] = Graphics.FromImage(letters[i - 1]);
+                letterDrawings[i - 1].Clear(Color.White);
+                letterDrawings[i - 1].DrawString(Convert.ToChar('A' + i - 1).ToString(), font, textBrush, 0, 0);
+                letterDrawings[i - 1].Save();
+                letterDrawings[i - 1].Dispose();
             }
 
             var tileWidth = imgs[0].Width;
             var tileHeight = imgs[0].Height;
 
-            var boardImg = new Bitmap(tileWidth * 9, tileHeight * 9);
+            var boardImg = new Bitmap(tileWidth * 10, tileHeight * 10);
             var boardDrawing = Graphics.FromImage(boardImg);
 
             for (int i = 0; i < 9; i++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int j = 0; j < 10; j++)
                 {
-                    if (board[i, j] != -1)
+                    if (j == 0)
                     {
-                        boardDrawing.DrawImage(imgs[board[i, j]], j * tileWidth, i * tileHeight);
+                        boardDrawing.DrawImage(letters[i], j * tileWidth, i * tileHeight);
+                    }
+                    else if (board[i, j - 1] != -1)
+                    {
+                        boardDrawing.DrawImage(imgs[board[i, j - 1]], j * tileWidth, i * tileHeight);
                     }
                     else
                     {
@@ -256,22 +270,27 @@ namespace ShajeshBot.Utilities
                 }
             }
 
+            boardDrawing.DrawImage(imgs[0], 0, 9 * tileHeight);
+
+            for (int j = 1; j < 10; j++)
+            {
+                boardDrawing.DrawImage(imgs[j], j * tileWidth, 9 * tileHeight);
+            }
+
             var smallPen = new Pen(textBrush, 1);
             var bigPen = new Pen(textBrush, 3);
 
-            for (int i = 1; i < 9; i++)
+            for (int i = 1; i < 10; i++)
             {
-                boardDrawing.DrawLine(smallPen, tileWidth * i, 0, tileWidth * i, tileHeight * 9);
-                boardDrawing.DrawLine(smallPen, 0, tileHeight * i, tileWidth * 9, tileHeight * i);
+                boardDrawing.DrawLine(smallPen, tileWidth * i, 0, tileWidth * i, tileHeight * 10); //horizontal lines
+                boardDrawing.DrawLine(smallPen, 0, tileHeight * i, tileWidth * 10, tileHeight * i); //vertical lines
             }
 
-            for (int i = 0; i < 9; i += 3)
+            for (int i = 0; i <= 9; i += 3)
             {
-                boardDrawing.DrawLine(bigPen, tileWidth * i, 0, tileWidth * i, tileHeight * 9);
-                boardDrawing.DrawLine(bigPen, 0, tileHeight * i, tileWidth * 9, tileHeight * i);
+                boardDrawing.DrawLine(bigPen, tileWidth * (i + 1), 0, tileWidth * (i + 1), tileHeight * 9); //horizontal lines
+                boardDrawing.DrawLine(bigPen, tileWidth, tileHeight * i, tileWidth * 10, tileHeight * i); //vertical lines
             }
-            boardDrawing.DrawLine(bigPen, tileWidth * 9 - 1, 0, tileWidth * 9 - 1, tileHeight * 9);
-            boardDrawing.DrawLine(bigPen, 0, tileHeight * 9 - 1, tileWidth * 9, tileHeight * 9 - 1);
 
             boardDrawing.Save();
 

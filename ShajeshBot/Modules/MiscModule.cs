@@ -14,7 +14,7 @@ namespace ShajeshBot.Modules
         [CmdSummary(nameof(Resource.SudokuSummary), typeof(Resource))]
         public async Task GenerateSudokuPuzzle()
         {
-            var sudokuGen = new SudokuGenerator();
+            var sudokuGen = new SudokuRunner();
 
             sudokuGen.Create();
             var puzzleDrawing = sudokuGen.DrawPuzzle();

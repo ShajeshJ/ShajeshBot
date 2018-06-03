@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ShajeshBot.Utilities
 {
-    public class SudokuGenerator
+    public class SudokuRunner
     {
         private Random _rng;
 
@@ -60,13 +60,13 @@ namespace ShajeshBot.Utilities
             }
         }
 
-        static SudokuGenerator()
+        static SudokuRunner()
         {
             InitSetLookup();
             CreateArtifacts();
         }
 
-        public SudokuGenerator()
+        public SudokuRunner()
         {
             _rng = new Random();
             _solvedBoard = new int[81];

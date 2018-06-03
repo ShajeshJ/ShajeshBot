@@ -156,7 +156,7 @@
     </Compile>
     <Compile Include="ShajeshBot.cs" />
     <Compile Include="Utilities\CustomConfigManager.cs" />
-    <Compile Include="Utilities\SudokuGenerator.cs" />
+    <Compile Include="Utilities\SudokuRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

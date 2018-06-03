@@ -13,6 +13,15 @@ namespace ShajeshBot.Utilities
         private int[] _solvedBoard;
         private int[] _puzzleBoard;
 
+        private static Bitmap _blankTile;
+        private static Bitmap[] _numberTiles;
+        private static Bitmap[] _letterTiles;
+        private static Font _font;
+        private static SolidBrush _textBrush;
+
+        private static int _tileWidth;
+        private static int _tileHeight;
+
         private static Dictionary<int, IEnumerable<int>> _setLookup;
 
         public int[,] SolvedBoard
@@ -54,6 +63,7 @@ namespace ShajeshBot.Utilities
         static SudokuGenerator()
         {
             InitSetLookup();
+            CreateArtifacts();
         }
 
         public SudokuGenerator()
@@ -107,6 +117,52 @@ namespace ShajeshBot.Utilities
                 else
                     _setLookup[k] = new List<int>(x.Where(v => v != k));
             }));
+        }
+
+        private static void CreateArtifacts()
+        {
+            var tmpImg = new Bitmap(1, 1);
+            var tmpDrawing = Graphics.FromImage(tmpImg);
+
+            _font = new Font(FontFamily.GenericMonospace, 24, FontStyle.Bold, GraphicsUnit.Pixel);
+            _textBrush = new SolidBrush(Color.Black);
+
+            var textSize = tmpDrawing.MeasureString("1", _font);
+
+            tmpImg.Dispose();
+            tmpDrawing.Dispose();
+            
+            _blankTile = new Bitmap((int)textSize.Width, (int)textSize.Height);
+            var blankDrawing = Graphics.FromImage(_blankTile);
+            blankDrawing.Clear(Color.White);
+            blankDrawing.Save();
+            blankDrawing.Dispose();
+
+            _numberTiles = new Bitmap[9];
+            var numDrawings = new Graphics[9];
+
+            _letterTiles = new Bitmap[9];
+            var letterDrawings = new Graphics[9];
+
+            for (int i = 0; i < _numberTiles.Length; i++)
+            {
+                _numberTiles[i] = new Bitmap((int)textSize.Width, (int)textSize.Height);
+                numDrawings[i] = Graphics.FromImage(_numberTiles[i]);
+                numDrawings[i].Clear(Color.White);
+                numDrawings[i].DrawString((i + 1).ToString(), _font, _textBrush, 0, 0);
+                numDrawings[i].Save();
+                numDrawings[i].Dispose();
+
+                _letterTiles[i] = new Bitmap((int)textSize.Width, (int)textSize.Height);
+                letterDrawings[i] = Graphics.FromImage(_letterTiles[i]);
+                letterDrawings[i].Clear(Color.White);
+                letterDrawings[i].DrawString(Convert.ToChar('A' + i).ToString(), _font, _textBrush, 0, 0);
+                letterDrawings[i].Save();
+                letterDrawings[i].Dispose();
+            }
+
+            _tileWidth = _blankTile.Width;
+            _tileHeight = _blankTile.Height;
         }
 
         public void Create()
@@ -205,50 +261,7 @@ namespace ShajeshBot.Utilities
 
         private static Image DrawBoard(int[,] board)
         {
-            var tmpImg = new Bitmap(1, 1);
-            var tmpDrawing = Graphics.FromImage(tmpImg);
-
-            var font = new Font(FontFamily.GenericMonospace, 24, FontStyle.Bold, GraphicsUnit.Pixel);
-            var textBrush = new SolidBrush(Color.Black);
-
-            var textSize = tmpDrawing.MeasureString("1", font);
-
-            tmpImg.Dispose();
-            tmpDrawing.Dispose();
-
-            var imgs = new Bitmap[10];
-            var drawings = new Graphics[10];
-
-            var letters = new Bitmap[9];
-            var letterDrawings = new Graphics[9];
-
-            imgs[0] = new Bitmap((int)textSize.Width, (int)textSize.Height);
-            drawings[0] = Graphics.FromImage(imgs[0]);
-            drawings[0].Clear(Color.White);
-            drawings[0].Save();
-            drawings[0].Dispose();
-
-            for (int i = 1; i < imgs.Length; i++)
-            {
-                imgs[i] = new Bitmap((int)textSize.Width, (int)textSize.Height);
-                drawings[i] = Graphics.FromImage(imgs[i]);
-                drawings[i].Clear(Color.White);
-                drawings[i].DrawString(i.ToString(), font, textBrush, 0, 0);
-                drawings[i].Save();
-                drawings[i].Dispose();
-
-                letters[i - 1] = new Bitmap((int)textSize.Width, (int)textSize.Height);
-                letterDrawings[i - 1] = Graphics.FromImage(letters[i - 1]);
-                letterDrawings[i - 1].Clear(Color.White);
-                letterDrawings[i - 1].DrawString(Convert.ToChar('A' + i - 1).ToString(), font, textBrush, 0, 0);
-                letterDrawings[i - 1].Save();
-                letterDrawings[i - 1].Dispose();
-            }
-
-            var tileWidth = imgs[0].Width;
-            var tileHeight = imgs[0].Height;
-
-            var boardImg = new Bitmap(tileWidth * 10, tileHeight * 10);
+            var boardImg = new Bitmap(_tileWidth * 10, _tileHeight * 10);
             var boardDrawing = Graphics.FromImage(boardImg);
 
             for (int i = 0; i < 9; i++)
@@ -257,39 +270,39 @@ namespace ShajeshBot.Utilities
                 {
                     if (j == 0)
                     {
-                        boardDrawing.DrawImage(letters[i], j * tileWidth, i * tileHeight);
+                        boardDrawing.DrawImage(_letterTiles[i], j * _tileWidth, i * _tileHeight);
                     }
-                    else if (board[i, j - 1] != -1)
+                    else if (board[i, j - 1] != 0)
                     {
-                        boardDrawing.DrawImage(imgs[board[i, j - 1]], j * tileWidth, i * tileHeight);
+                        boardDrawing.DrawImage(_numberTiles[board[i, j - 1] - 1], j * _tileWidth, i * _tileHeight);
                     }
                     else
                     {
-                        boardDrawing.DrawImage(imgs[0], j * tileWidth, i * tileHeight);
+                        boardDrawing.DrawImage(_blankTile, j * _tileWidth, i * _tileHeight);
                     }
                 }
             }
 
-            boardDrawing.DrawImage(imgs[0], 0, 9 * tileHeight);
+            boardDrawing.DrawImage(_blankTile, 0, 9 * _tileHeight);
 
             for (int j = 1; j < 10; j++)
             {
-                boardDrawing.DrawImage(imgs[j], j * tileWidth, 9 * tileHeight);
+                boardDrawing.DrawImage(_numberTiles[j - 1], j * _tileWidth, 9 * _tileHeight);
             }
 
-            var smallPen = new Pen(textBrush, 1);
-            var bigPen = new Pen(textBrush, 3);
+            var smallPen = new Pen(_textBrush, 1);
+            var bigPen = new Pen(_textBrush, 3);
 
             for (int i = 1; i < 10; i++)
             {
-                boardDrawing.DrawLine(smallPen, tileWidth * i, 0, tileWidth * i, tileHeight * 10); //horizontal lines
-                boardDrawing.DrawLine(smallPen, 0, tileHeight * i, tileWidth * 10, tileHeight * i); //vertical lines
+                boardDrawing.DrawLine(smallPen, _tileWidth * i, 0, _tileWidth * i, _tileHeight * 10); //horizontal lines
+                boardDrawing.DrawLine(smallPen, 0, _tileHeight * i, _tileWidth * 10, _tileHeight * i); //vertical lines
             }
 
             for (int i = 0; i <= 9; i += 3)
             {
-                boardDrawing.DrawLine(bigPen, tileWidth * (i + 1), 0, tileWidth * (i + 1), tileHeight * 9); //horizontal lines
-                boardDrawing.DrawLine(bigPen, tileWidth, tileHeight * i, tileWidth * 10, tileHeight * i); //vertical lines
+                boardDrawing.DrawLine(bigPen, _tileWidth * (i + 1), 0, _tileWidth * (i + 1), _tileHeight * 9); //horizontal lines
+                boardDrawing.DrawLine(bigPen, _tileWidth, _tileHeight * i, _tileWidth * 10, _tileHeight * i); //vertical lines
             }
 
             boardDrawing.Save();

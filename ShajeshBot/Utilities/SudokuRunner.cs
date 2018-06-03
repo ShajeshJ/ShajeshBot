@@ -1,4 +1,5 @@
-﻿using ShajeshBot.Extensions;
+﻿using ShajeshBot.Enums;
+using ShajeshBot.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,6 +14,7 @@ namespace ShajeshBot.Utilities
         private static Dictionary<int, IEnumerable<int>> _setLookup;
         private int[] _solvedBoard;
         private int[] _puzzleBoard;
+        private int[] _gameBoard;
 
         private static Bitmap _blankTile;
         private static Bitmap[] _numberTiles;
@@ -52,6 +54,24 @@ namespace ShajeshBot.Utilities
                     for (int j = 0; j <= board.GetUpperBound(1); j++)
                     {
                         board[i, j] = _puzzleBoard[i * 9 + j];
+                    }
+                }
+
+                return board;
+            }
+        }
+
+        public int[,] GameBoard
+        {
+            get
+            {
+                var board = new int[9, 9];
+
+                for (int i = 0; i <= board.GetUpperBound(0); i++)
+                {
+                    for (int j = 0; j <= board.GetUpperBound(1); j++)
+                    {
+                        board[i, j] = _gameBoard[i * 9 + j];
                     }
                 }
 
@@ -294,24 +314,6 @@ namespace ShajeshBot.Utilities
             }
         }
 
-        private bool CheckSolutionsMatch(int[] board1, int[] board2)
-        {
-            if (board1.Length != board2.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < board1.Length; i++)
-            {
-                if (board1[i] != board2[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         #endregion
 
         #region Board Drawing
@@ -324,6 +326,11 @@ namespace ShajeshBot.Utilities
         public Image DrawSolution()
         {
             return DrawBoard(SolvedBoard);
+        }
+
+        public Image DrawGame()
+        {
+            return DrawBoard(GameBoard);
         }
 
         private static Image DrawBoard(int[,] board)
@@ -388,56 +395,81 @@ namespace ShajeshBot.Utilities
 
             _solvedBoard = FillBoard(0, _solvedBoard);
             _puzzleBoard = GeneratePuzzle(_solvedBoard);
+            Reset();
         }
 
-        private SudokuError InsertValue(int row, int col, int value)
+        public void Reset()
+        {
+            _gameBoard = new int[81];
+            Array.Copy(_puzzleBoard, _gameBoard, _puzzleBoard.Length);
+        }
+
+        public SudokuResult InsertValue(int row, int col, int value)
         {
             if (row < 0 || row > 8 || col < 0 || col > 8)
-                return SudokuError.BadCoords;
+                return SudokuResult.BadCoords;
 
             if (value < 1 || value > 9)
-                return SudokuError.BadVal;
-
-            if (PuzzleBoard[row, col] != 0)
-                return SudokuError.Occupied;
+                return SudokuResult.BadVal;
 
             var cell = row * 9 + col;
+
+            if (_puzzleBoard[cell] != 0)
+                return SudokuResult.Immutable;
+
+            if (_gameBoard[cell] != 0)
+                return SudokuResult.Occupied;
 
             foreach(var conflictCell in _setLookup[cell])
             {
-                if (_puzzleBoard[conflictCell] == _puzzleBoard[cell])
-                    return SudokuError.Conflict;
+                if (_gameBoard[conflictCell] == value)
+                    return SudokuResult.Conflict;
             }
 
-            _puzzleBoard[cell] = value;
+            _gameBoard[cell] = value;
 
-            return SudokuError.Success;
+            if (CheckSolutionsMatch(_gameBoard, _solvedBoard))
+                return SudokuResult.Completed;
+            else
+                return SudokuResult.Success;
         }
 
-        private SudokuError RemoveValue(int row, int col)
+        public SudokuResult RemoveValue(int row, int col)
         {
             if (row < 0 || row > 8 || col < 0 || col > 8)
-                return SudokuError.BadCoords;
-
-            if (PuzzleBoard[row, col] == 0)
-                return SudokuError.Unoccupied;
+                return SudokuResult.BadCoords;
 
             var cell = row * 9 + col;
-            _puzzleBoard[cell] = 0;
 
-            return SudokuError.Success;
-        }
+            if (_puzzleBoard[cell] != 0)
+                return SudokuResult.Immutable;
 
-        enum SudokuError
-        {
-            Success, 
-            BadCoords, 
-            BadVal, 
-            Conflict, 
-            Occupied, 
-            Unoccupied
+            if (_gameBoard[cell] == 0)
+                return SudokuResult.Unoccupied;
+
+            _gameBoard[cell] = 0;
+
+            return SudokuResult.Success;
         }
 
         #endregion
+
+        private bool CheckSolutionsMatch(int[] board1, int[] board2)
+        {
+            if (board1.Length != board2.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < board1.Length; i++)
+            {
+                if (board1[i] != board2[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

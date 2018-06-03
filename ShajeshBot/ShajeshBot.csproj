@@ -133,6 +133,7 @@
     <Compile Include="Attributes\CmdSummaryAttribute.cs" />
     <Compile Include="Attributes\RequireBotContextAttribute.cs" />
     <Compile Include="CommandHandler.cs" />
+    <Compile Include="Enums\SudokuResult.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\SocketGuildExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

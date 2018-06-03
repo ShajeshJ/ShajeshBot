@@ -73,6 +73,8 @@ namespace ShajeshBot.Utilities
             _puzzleBoard = new int[81];
         }
 
+        #region Setup Methods
+
         private static void InitSetLookup()
         {
             List<List<int>> allSets = new List<List<int>>
@@ -165,6 +167,8 @@ namespace ShajeshBot.Utilities
             _tileHeight = _blankTile.Height;
         }
 
+        #endregion
+
         public void Create()
         {
             _solvedBoard = new int[81];
@@ -172,6 +176,8 @@ namespace ShajeshBot.Utilities
             _solvedBoard = FillBoard(0, _solvedBoard);
             _puzzleBoard = GeneratePuzzle(_solvedBoard);
         }
+
+        #region Board Generation
 
         private int[] FillBoard(int cell, int[] board)
         {
@@ -208,6 +214,10 @@ namespace ShajeshBot.Utilities
                 }
             }
         }
+
+        #endregion
+
+        #region Puzzle Generation
 
         private int[] GeneratePuzzle(int[] board)
         {
@@ -247,67 +257,6 @@ namespace ShajeshBot.Utilities
             } while (!IsUniquePuzzle(0, newboard, board));
 
             return newboard;
-        }
-
-        public Image DrawPuzzle()
-        {
-            return DrawBoard(PuzzleBoard);
-        }
-
-        public Image DrawSolution()
-        {
-            return DrawBoard(SolvedBoard);
-        }
-
-        private static Image DrawBoard(int[,] board)
-        {
-            var boardImg = new Bitmap(_tileWidth * 10, _tileHeight * 10);
-            var boardDrawing = Graphics.FromImage(boardImg);
-
-            for (int i = 0; i < 9; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    if (j == 0)
-                    {
-                        boardDrawing.DrawImage(_letterTiles[i], j * _tileWidth, i * _tileHeight);
-                    }
-                    else if (board[i, j - 1] != 0)
-                    {
-                        boardDrawing.DrawImage(_numberTiles[board[i, j - 1] - 1], j * _tileWidth, i * _tileHeight);
-                    }
-                    else
-                    {
-                        boardDrawing.DrawImage(_blankTile, j * _tileWidth, i * _tileHeight);
-                    }
-                }
-            }
-
-            boardDrawing.DrawImage(_blankTile, 0, 9 * _tileHeight);
-
-            for (int j = 1; j < 10; j++)
-            {
-                boardDrawing.DrawImage(_numberTiles[j - 1], j * _tileWidth, 9 * _tileHeight);
-            }
-
-            var smallPen = new Pen(_textBrush, 1);
-            var bigPen = new Pen(_textBrush, 3);
-
-            for (int i = 1; i < 10; i++)
-            {
-                boardDrawing.DrawLine(smallPen, _tileWidth * i, 0, _tileWidth * i, _tileHeight * 10); //horizontal lines
-                boardDrawing.DrawLine(smallPen, 0, _tileHeight * i, _tileWidth * 10, _tileHeight * i); //vertical lines
-            }
-
-            for (int i = 0; i <= 9; i += 3)
-            {
-                boardDrawing.DrawLine(bigPen, _tileWidth * (i + 1), 0, _tileWidth * (i + 1), _tileHeight * 9); //horizontal lines
-                boardDrawing.DrawLine(bigPen, _tileWidth, _tileHeight * i, _tileWidth * 10, _tileHeight * i); //vertical lines
-            }
-
-            boardDrawing.Save();
-
-            return boardImg;
         }
 
         private bool IsUniquePuzzle(int cell, int[] board, int[] solution)
@@ -371,5 +320,78 @@ namespace ShajeshBot.Utilities
 
             return true;
         }
+
+        #endregion
+
+        #region Board Drawing
+
+        public Image DrawPuzzle()
+        {
+            return DrawBoard(PuzzleBoard);
+        }
+
+        public Image DrawSolution()
+        {
+            return DrawBoard(SolvedBoard);
+        }
+
+        private static Image DrawBoard(int[,] board)
+        {
+            var boardImg = new Bitmap(_tileWidth * 10, _tileHeight * 10);
+            var boardDrawing = Graphics.FromImage(boardImg);
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    if (j == 0)
+                    {
+                        boardDrawing.DrawImage(_letterTiles[i], j * _tileWidth, i * _tileHeight);
+                    }
+                    else if (board[i, j - 1] != 0)
+                    {
+                        boardDrawing.DrawImage(_numberTiles[board[i, j - 1] - 1], j * _tileWidth, i * _tileHeight);
+                    }
+                    else
+                    {
+                        boardDrawing.DrawImage(_blankTile, j * _tileWidth, i * _tileHeight);
+                    }
+                }
+            }
+
+            boardDrawing.DrawImage(_blankTile, 0, 9 * _tileHeight);
+
+            for (int j = 1; j < 10; j++)
+            {
+                boardDrawing.DrawImage(_numberTiles[j - 1], j * _tileWidth, 9 * _tileHeight);
+            }
+
+            var smallPen = new Pen(_textBrush, 1);
+            var bigPen = new Pen(_textBrush, 3);
+
+            for (int i = 1; i < 10; i++)
+            {
+                boardDrawing.DrawLine(smallPen, _tileWidth * i, 0, _tileWidth * i, _tileHeight * 10); //horizontal lines
+                boardDrawing.DrawLine(smallPen, 0, _tileHeight * i, _tileWidth * 10, _tileHeight * i); //vertical lines
+            }
+
+            for (int i = 0; i <= 9; i += 3)
+            {
+                boardDrawing.DrawLine(bigPen, _tileWidth * (i + 1), 0, _tileWidth * (i + 1), _tileHeight * 9); //horizontal lines
+                boardDrawing.DrawLine(bigPen, _tileWidth, _tileHeight * i, _tileWidth * 10, _tileHeight * i); //vertical lines
+            }
+
+            boardDrawing.Save();
+
+            return boardImg;
+        }
+
+        #endregion
+
+        #region User Actions
+
+
+
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ using ShajeshBot.Attributes;
 using ShajeshBot.Enums;
 using ShajeshBot.Utilities;
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -12,13 +13,25 @@ namespace ShajeshBot.Modules
 {
     public class MiscModule : ModuleBase<SocketCommandContext>
     {
-        private static SudokuRunner _sudoku;
-        private static IMessage _sudokuMsg;
+        private static SudokuMemory _sudoku
+        {
+            get
+            {
+                return (SudokuMemory)ShajeshBot.Memory["_sudokuRunnerMemory"];
+            }
+            set
+            {
+                ShajeshBot.Memory.AddOrUpdate("_sudokuRunnerMemory", value, (key, old) => value);
+            }
+        }
 
         static MiscModule()
         {
-            _sudoku = new SudokuRunner();
-            _sudokuMsg = null;
+            _sudoku = new SudokuMemory()
+            {
+                Runner = new SudokuRunner(),
+                Msg = null
+            };
         }
 
         #region Sudoku Commands
@@ -30,13 +43,13 @@ namespace ShajeshBot.Modules
         [CmdRemarks(nameof(Resource.SudokuNewRemarks), typeof(Resource))]
         public async Task StartSudokuGame()
         {
-            if (_sudokuMsg != null)
+            if (_sudoku.Msg != null)
             {
                 await SendSudokuError(SudokuResult.GameExists);
                 return;
             }
 
-            _sudoku.Create();
+            _sudoku.Runner.Create();
 
             await Context.Message.DeleteAsync();
             await SendSudokuImg();
@@ -49,7 +62,7 @@ namespace ShajeshBot.Modules
         [CmdRemarks(nameof(Resource.SudokuShowRemarks), typeof(Resource))]
         public async Task ShowSudokuPuzzle()
         {
-            if (_sudokuMsg == null)
+            if (_sudoku.Msg == null)
             {
                 await SendSudokuError(SudokuResult.GameNotExists);
                 return;
@@ -66,13 +79,13 @@ namespace ShajeshBot.Modules
         [CmdRemarks(nameof(Resource.SudokuEndRemarks), typeof(Resource))]
         public async Task EndSudokuGame()
         {
-            if (_sudokuMsg == null)
+            if (_sudoku.Msg == null)
             {
                 await SendSudokuError(SudokuResult.GameNotExists);
                 return;
             }
 
-            _sudokuMsg = null;
+            _sudoku.Msg = null;
             
             await ReplyAsync("Sudoku game ended successfully.");
         }
@@ -84,13 +97,13 @@ namespace ShajeshBot.Modules
         [CmdRemarks(nameof(Resource.SudokuResetRemarks), typeof(Resource))]
         public async Task ResetSudokuGame()
         {
-            if (_sudokuMsg == null)
+            if (_sudoku.Msg == null)
             {
                 await SendSudokuError(SudokuResult.GameNotExists);
                 return;
             }
 
-            _sudoku.Reset();
+            _sudoku.Runner.Reset();
             
             await SendSudokuImg();
         }
@@ -102,7 +115,7 @@ namespace ShajeshBot.Modules
         [CmdRemarks(nameof(Resource.SudokuSetRemarks), typeof(Resource))]
         public async Task SetSudokuPiece(string coordinates, int value)
         {
-            if (_sudokuMsg == null)
+            if (_sudoku.Msg == null)
             {
                 await SendSudokuError(SudokuResult.GameNotExists);
                 return;
@@ -124,7 +137,7 @@ namespace ShajeshBot.Modules
 
             col--;
 
-            var result = _sudoku.InsertValue(row, col, value);
+            var result = _sudoku.Runner.InsertValue(row, col, value);
 
             if (result == SudokuResult.Success)
             {
@@ -134,7 +147,7 @@ namespace ShajeshBot.Modules
             {
                 await Context.Message.DeleteAsync();
                 await SendSudokuImg();
-                _sudokuMsg = null;
+                _sudoku.Msg = null;
                 await ReplyAsync($"You actually finished the sudoku {Context.User.Mention}. I guess miracles do happen.");
             }
             else
@@ -150,7 +163,7 @@ namespace ShajeshBot.Modules
         [CmdRemarks(nameof(Resource.SudokuDelRemarks), typeof(Resource))]
         public async Task DeleteSudokuPiece(string coordinates)
         {
-            if (_sudokuMsg == null)
+            if (_sudoku.Msg == null)
             {
                 await SendSudokuError(SudokuResult.GameNotExists);
                 return;
@@ -172,7 +185,7 @@ namespace ShajeshBot.Modules
 
             col--;
 
-            var result = _sudoku.RemoveValue(row, col);
+            var result = _sudoku.Runner.RemoveValue(row, col);
 
             if (result == SudokuResult.Success)
             {
@@ -186,13 +199,13 @@ namespace ShajeshBot.Modules
 
         private async Task SendSudokuImg()
         {
-            var puzzleDrawing = _sudoku.DrawGame();
+            var puzzleDrawing = _sudoku.Runner.DrawGame();
 
             Task delSudokuTask;
             Task<RestUserMessage> makeSudokuTask;
 
-            if (_sudokuMsg != null)
-                delSudokuTask = _sudokuMsg.DeleteAsync();
+            if (_sudoku.Msg != null)
+                delSudokuTask = _sudoku.Msg.DeleteAsync();
             else
                 delSudokuTask = Task.FromResult(0);
 
@@ -207,7 +220,7 @@ namespace ShajeshBot.Modules
 
             await Task.WhenAll(delSudokuTask, makeSudokuTask);
 
-            _sudokuMsg = makeSudokuTask.Result;
+            _sudoku.Msg = makeSudokuTask.Result;
 
             File.Delete($"sudoku{imgIdx}.png");
         }
@@ -268,5 +281,11 @@ namespace ShajeshBot.Modules
 
             await ReplyAsync($"Rolled: {value}");
         }
+    }
+
+    public class SudokuMemory
+    {
+        public SudokuRunner Runner;
+        public IMessage Msg;
     }
 }

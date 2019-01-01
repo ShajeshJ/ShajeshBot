@@ -78,7 +78,7 @@ namespace ShajeshBot
                     if (result.Error == CommandError.Exception)
                     {
                         await context.Guild.MessageAdmins($"Error caused by command: '{msg.Content}'\r\nException: '{result.ErrorReason}'");
-                        await context.Channel.SendMessageAsync("An unexpected error occurred.");
+                        await context.Channel.SendMessageAsync("An unexpected error occurred. Please contact an admin.");
                     }
                     else
                     {

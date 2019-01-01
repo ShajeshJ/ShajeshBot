@@ -153,6 +153,12 @@
   <data name="BnsMpSummary" xml:space="preserve">
     <value>Use this command to get the specified item's marketplace listings in Blade &amp; Soul.\r\n**Usage Examples:**\r\n!mp pts\r\n!mp elysian\r\n!bns mp Moonstone</value>
   </data>
+  <data name="ChangeNameRemarks" xml:space="preserve">
+    <value>1) To reset to your original username, use the command without putting a name.\r\n2) The length of your desired nickname and your username together must be less than 30 characters long.\r\n3) This command can only be used in the bot channel.</value>
+  </data>
+  <data name="ChangeNameSummary" xml:space="preserve">
+    <value>This command will change your nickname on the server. It will append your current username enclosed in square brackets to the desired nickname.</value>
+  </data>
   <data name="CreateGroupRemarks" xml:space="preserve">
     <value>The command will fail if a role with the specified name already exists.</value>
   </data>

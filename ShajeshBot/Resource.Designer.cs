@@ -169,6 +169,24 @@ namespace ShajeshBot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1) To reset to your original username, use the command without putting a name.\r\n2) The length of your desired nickname and your username together must be less than 30 characters long.\r\n3) This command can only be used in the bot channel..
+        /// </summary>
+        internal static string ChangeNameRemarks {
+            get {
+                return ResourceManager.GetString("ChangeNameRemarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will change your nickname on the server. It will append your current username enclosed in square brackets to the desired nickname..
+        /// </summary>
+        internal static string ChangeNameSummary {
+            get {
+                return ResourceManager.GetString("ChangeNameSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The command will fail if a role with the specified name already exists..
         /// </summary>
         internal static string CreateGroupRemarks {

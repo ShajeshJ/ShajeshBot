@@ -205,7 +205,7 @@ namespace ShajeshBot {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error will be returned if the provided values aren&apos;t integers, or if the minimum value exceeds the maximum value..
+        ///   Looks up a localized string similar to An error will be returned if the provided values aren&apos;t integers, if the minimum value exceeds the maximum value, or if the number of roles requested is less than 1..
         /// </summary>
         internal static string DiceRemarks {
             get {
@@ -214,7 +214,7 @@ namespace ShajeshBot {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This command will return a random integer between the minimum and maximum values inclusively..
+        ///   Looks up a localized string similar to This command will return a random integer between the minimum and maximum values inclusively, rolling the dice the requested number of times (1 is default)..
         /// </summary>
         internal static string DiceSummary {
             get {

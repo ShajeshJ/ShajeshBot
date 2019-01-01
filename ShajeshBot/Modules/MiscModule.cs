@@ -268,18 +268,27 @@ namespace ShajeshBot.Modules
         [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.DiceSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.DiceRemarks), typeof(Resource))]
-        public async Task GenRandomNumber(int min, int max)
+        public async Task GenRandomNumber(int min, int max, int number_of_roles = 1)
         {
             if (min > max)
             {
-                await ReplyAsync("Min value must be less than max value.");
+                await ReplyAsync("Min value must be less than or equal to max value.");
+                return;
+            }
+
+            if (number_of_roles < 1)
+            {
+                await ReplyAsync("Cannot specify < 1 for the number of roles to make.");
                 return;
             }
 
             var rand = new Random();
-            var value = rand.Next(min, max + 1);
 
-            await ReplyAsync($"Rolled: {value}");
+            for (int i = 0; i < number_of_roles; i++)
+            {
+                var value = rand.Next(min, max + 1);
+                await ReplyAsync($"Rolling ({min} - {max}): {value}");
+            }
         }
     }
 

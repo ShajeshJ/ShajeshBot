@@ -166,10 +166,10 @@
     <value>This command will delete the specified custom mention group.</value>
   </data>
   <data name="DiceRemarks" xml:space="preserve">
-    <value>An error will be returned if the provided values aren't integers, or if the minimum value exceeds the maximum value.</value>
+    <value>An error will be returned if the provided values aren't integers, if the minimum value exceeds the maximum value, or if the number of roles requested is less than 1.</value>
   </data>
   <data name="DiceSummary" xml:space="preserve">
-    <value>This command will return a random integer between the minimum and maximum values inclusively.</value>
+    <value>This command will return a random integer between the minimum and maximum values inclusively, rolling the dice the requested number of times (1 is default).</value>
   </data>
   <data name="HelpSummary" xml:space="preserve">
     <value>Returns a list of available commands and their parameters, or if specified, details about a specific command.</value>

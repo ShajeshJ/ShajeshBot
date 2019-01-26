@@ -14,6 +14,7 @@ namespace ShajeshBot.Utilities
     public static class CustomEventHandlers
     {
         public static string QUOTE_REGEX = "https?:\\/\\/discordapp\\.com\\/channels\\/([0-9]+)\\/([0-9]+)\\/([0-9]+)";
+        private static string[] _imageTypes = { "gif", "png", "jpg" };
 
         public static async Task<bool> CreateQuoteMsg(string originalMsg, SocketCommandContext context)
         {
@@ -66,11 +67,22 @@ namespace ShajeshBot.Utilities
                 };
 
                 embed.Description = "";
+                var imgAttachment = quotedMsg.Attachments.FirstOrDefault()?.Url ?? "";
+
+                //Embed image if possible
+                if (_imageTypes.Any(x => imgAttachment.EndsWith(x)))
+                {
+                    embed.ImageUrl = imgAttachment;
+                }
+
+                //Add text content
                 if (!quotedMsg.Content.IsNullOrWhitespace())
                 {
                     embed.Description += quotedMsg.Content + "\n";
                 }
-                if (quotedMsg.Attachments.FirstOrDefault()?.Url != null)
+
+                //If attachment exists but could not be embeded, just add as plaintext link
+                if (quotedMsg.Attachments.FirstOrDefault()?.Url != null && embed.ImageUrl == null)
                 {
                     embed.Description += quotedMsg.Attachments.FirstOrDefault().Url + "\n";
                 }

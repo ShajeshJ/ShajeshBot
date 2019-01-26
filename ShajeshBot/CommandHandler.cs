@@ -6,10 +6,12 @@ using Google.Apis.Sheets.v4;
 using Google.Apis.Util.Store;
 using Microsoft.Extensions.DependencyInjection;
 using ShajeshBot.Extensions;
+using static ShajeshBot.Utilities.CustomEventHandlers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -86,6 +88,10 @@ namespace ShajeshBot
                     }
                 }
                 typingState.Dispose();
+            }
+            else if (Regex.IsMatch(msg.Content, QUOTE_REGEX))
+            {
+                await CreateQuoteMsg(msg.Content, context);
             }
         }
 

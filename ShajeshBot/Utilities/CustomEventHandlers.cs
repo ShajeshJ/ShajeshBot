@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using ShajeshBot.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,8 +65,20 @@ namespace ShajeshBot.Utilities
                     IconUrl = quotedMsg.Author.GetAvatarUrl()
                 };
 
-                embed.Description = quotedMsg.Content + "\n";
-                embed.Description += @"\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_";
+                embed.Description = "";
+                if (!quotedMsg.Content.IsNullOrWhitespace())
+                {
+                    embed.Description += quotedMsg.Content + "\n";
+                }
+                if (quotedMsg.Attachments.FirstOrDefault()?.Url != null)
+                {
+                    embed.Description += quotedMsg.Attachments.FirstOrDefault().Url + "\n";
+                }
+
+                if (embed.Description != "")
+                {
+                    embed.Description += @"\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_";
+                }
                 embed.Description += $"\n[**View Original**](https://discordapp.com/channels/{guildId}/{channelId}/{msgId})";
 
                 embed.Footer = new EmbedFooterBuilder()

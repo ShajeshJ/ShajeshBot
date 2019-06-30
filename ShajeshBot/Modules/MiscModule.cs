@@ -3,10 +3,12 @@ using Discord.Commands;
 using Discord.Rest;
 using ShajeshBot.Attributes;
 using ShajeshBot.Enums;
+using ShajeshBot.Extensions;
 using ShajeshBot.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ShajeshBot.Modules
@@ -268,7 +270,7 @@ namespace ShajeshBot.Modules
         [RequireBotContext(CmdChannelType.BotChannel)]
         [CmdSummary(nameof(Resource.DiceSummary), typeof(Resource))]
         [CmdRemarks(nameof(Resource.DiceRemarks), typeof(Resource))]
-        public async Task GenRandomNumber(int min, int max, int number_of_roles = 1)
+        public async Task GenRandomNumber(int max, int min = 1, int number_of_roles = 1)
         {
             if (min > max)
             {
@@ -283,12 +285,99 @@ namespace ShajeshBot.Modules
             }
 
             var rand = new Random();
+            var output = "";
 
             for (int i = 0; i < number_of_roles; i++)
             {
                 var value = rand.Next(min, max + 1);
-                await ReplyAsync($"Rolling ({min} - {max}): {value}");
+                output += $"Rolling ({min} - {max}): {value}\n";
             }
+
+            await ReplyAsync($"```{output.TrimEnd('\n')}```");
+        }
+
+        [Command("dice")]
+        [Alias("roll")]
+        [RequireBotContext(CmdChannelType.BotChannel)]
+        [CmdSummary(nameof(Resource.DiceSummary), typeof(Resource))]
+        [CmdRemarks(nameof(Resource.DiceSummary), typeof(Resource))]
+        public async Task GenRandomNumber([Remainder]string dice_roll_notation)
+        {
+            // Try to match "{num}d{num}+{num}", such as 3d10+2
+            if (!Regex.IsMatch(dice_roll_notation, "^ *\\d* *d *\\d+ *((\\+|-) *\\d+ *)?$", RegexOptions.IgnoreCase))
+            {
+                await ReplyAsync($"'{dice_roll_notation}' does not follow valid dice notation. Dice notation takes a form such as `<# of dice>d<# of dice sides>(+/-)<flat value>`");
+                return;
+            }
+
+            dice_roll_notation = dice_roll_notation.Replace(" ", "");
+
+            var notationParts = dice_roll_notation.Split('d');
+            var numOfDice = notationParts[0].TryParseInt(1);
+            int diceSize;
+            int flatIncr;
+
+            if (notationParts[1].Contains("+"))
+            {
+                notationParts = notationParts[1].Split('+');
+                diceSize = notationParts[0].TryParseInt();
+                flatIncr = notationParts[1].TryParseInt();
+            }
+            else if (notationParts[1].Contains("-"))
+            {
+                notationParts = notationParts[1].Split('-');
+                diceSize = notationParts[0].TryParseInt();
+                flatIncr = ("-" + notationParts[1]).TryParseInt();
+            }
+            else
+            {
+                diceSize = notationParts[1].TryParseInt();
+                flatIncr = 0;
+            }
+
+            if (numOfDice < 1)
+            {
+                await ReplyAsync($"Number of dice to roll cannot be less than 1.");
+                return;
+            }
+
+            if (diceSize < 2)
+            {
+                await ReplyAsync($"The number of sides on the dice cannot be less than 2.");
+            }
+
+            var rand = new Random();
+            string output = "";
+            var minLen = 20 + diceSize.ToString().Length*2 + flatIncr.ToString().Length;
+
+            for (int i = 0; i < numOfDice; i++)
+            {
+                var value = rand.Next(1, diceSize + 1);
+
+                if (flatIncr == 0)
+                {
+                    output += $"Rolling (1 - {diceSize}): {value}\n";
+                }
+                else if (flatIncr > 0)
+                {
+                    var line = $"Rolling (1 - {diceSize}): {value} + {flatIncr} ";
+                    while (line.Length < minLen)
+                        line += ' ';
+
+                    output += line + $"= {value + flatIncr}\n";
+                }
+                else
+                {
+                    var line = $"Rolling (1 - {diceSize}): {value} - {flatIncr * -1} ";
+                    while (line.Length < minLen)
+                        line += ' ';
+
+                    output += line + $"= {value + flatIncr}\n";
+                }
+            }
+            output = output.TrimEnd('\n');
+
+            await ReplyAsync($"```{output}```");
         }
     }
 

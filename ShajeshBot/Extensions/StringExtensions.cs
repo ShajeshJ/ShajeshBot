@@ -19,5 +19,13 @@ namespace ShajeshBot.Extensions
         {
             return Regex.Unescape(str);
         }
+
+        public static int TryParseInt(this string str, int fallback = 0)
+        {
+            if (int.TryParse(str, out var value))
+                return value;
+            else
+                return fallback;
+        }
     }
 }
